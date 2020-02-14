@@ -81,6 +81,36 @@ const _validateGoogleAccount = async (req, res, next) => {
   }
 };
 
+const _validateFacebookAccount = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+  const {socialId, accessToken} = req.body;
+
+  const url = "https://graph.facebook.com/v2.3/me";
+  const params = {
+    access_token: accessToken,
+  };
+
+  try {
+    const data = await fetch(GET, url, params);
+    let sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.social = ? AND U.socialId = ?;", dbTblName.users, dbTblName.accountSettings);
+
+    let rows = await db.query(sql, [social.name.FACEBOOK, socialId]);
+
+    let registered = !!rows.length;
+    const invalidToken = data.id !== socialId;
+    
+    let result = {...data, registered, invalidToken};
+    if (!!registered) {
+      result = Object.assign({}, result, {...rows[0], accountType: rows[0]["accountType"] || accountTypes.WORK})
+    }
+
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const signInProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
@@ -188,7 +218,7 @@ const signUpProc = async (req, res, next) => {
       return;
     }
     const newRows = [
-      [null, social || "", socialId || "", email, hash, username, firstName, fatherName, lastName, countryCode, phone, "", "", date, date, "", ""],
+      [null, social || "", socialId || "", email || "", hash, username, firstName, fatherName, lastName, countryCode, phone, "", "", date, date, "", ""],
     ];
     sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.users);
     await db.query(sql, [newRows]);
@@ -210,7 +240,7 @@ const signUpProc = async (req, res, next) => {
   }
 };
 
-const validateGoogleAccount = async (req, res, next) => {
+const validateGoogleAccountProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
 
@@ -258,7 +288,7 @@ const validateGoogleAccount = async (req, res, next) => {
   }
 };
 
-const signInWithGoogle = async (req, res, next) => {
+const signInWithGoogleProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
 
@@ -287,6 +317,154 @@ const signInWithGoogle = async (req, res, next) => {
       res.status(200).send({
         result: langs.error,
         message: langs.yourAccountDoesNotSupportGoogleAuth,
+        user,
+      });
+      return;
+    }
+    //
+    // if (data.social !== social.name.GOOGLE) {
+    //   res.status(200).send({
+    //     result: langs.error,
+    //     message: langs.emailIsNotRegistered,
+    //     data,
+    //   });
+    //   return;
+    // }
+
+    if (user.deletedDate.length > 0) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.yourAccountIsClosed,
+      });
+      return;
+    }
+
+    if (user.allowedDate.length === 0) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.yourAccountIsNotAllowed,
+      });
+      return;
+    }
+
+    const token = jwt.sign(
+      {
+        id: user["id"],
+        email: user["email"],
+        firstName: user["firstName"],
+        fatherName: user["fatherName"],
+        lastName: user["lastName"],
+      },
+      session.secret
+    );
+
+    const today = new Date();
+    const date = dateformat(today, "yyyy-mm-dd");
+    const time = dateformat(today, "hh:MM TT");
+    const timestamp = today.getTime();
+    const remoteAddress = req.header["x-forwarded-for"] || req.connection.remoteAddress;
+    const newRows = [
+      [null, user.id, timestamp, date, time, remoteAddress]
+    ];
+    let sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
+    await db.query(sql, [newRows]);
+
+    res.status(200).send({
+      result: langs.success,
+      message: langs.successfullySignedIn,
+      data: {
+        user,
+        token,
+      },
+    });
+  } catch (err) {
+    tracer.error(JSON.stringify(err));
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.accountIsInvalid,
+      err,
+    });
+  }
+};
+
+const validateFacebookAccountProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+
+  try {
+    const data = await _validateFacebookAccount(req, res, next);
+    const registered = data.registered;
+    if (registered) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.accountIsAlreadyRegistered,
+        data,
+      });
+      return;
+    }
+    // const emailRegistered = data.emailRegistered;
+    // if (emailRegistered) {
+    //   res.status(200).send({
+    //     result: langs.error,
+    //     message: langs.emailAlreadyRegistered,
+    //     data,
+    //   });
+    //   return;
+    // }
+    // if (data.invalidToken) {
+    //   res.status(200).send({
+    //     result: langs.error,
+    //     message: langs.tokenIsValid,
+    //     data,
+    //   });
+    //   return;
+    // }
+    // tracer.info(data);
+    res.status(200).send({
+      result: langs.success,
+      data,
+    });
+  } catch (err) {
+    tracer.error(JSON.stringify(err));
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.accountIsInvalid,
+      err,
+    });
+  }
+};
+
+const signInWithFacebookProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+
+  try {
+    const user = await _validateFacebookAccount(req, res, next);
+    tracer.info(user);
+    const registered = user.registered;
+    if (!registered) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.accountIsNotRegistered,
+        user,
+      });
+      return;
+    }
+    // const emailRegistered = user.emailRegistered;
+    // if (!emailRegistered) {
+    //   res.status(200).send({
+    //     result: langs.error,
+    //     message: langs.emailIsNotRegistered,
+    //     user,
+    //   });
+    //   return;
+    // }
+    if (user.social !== social.name.FACEBOOK) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.yourAccountDoesNotSupportFacebookAuth,
         user,
       });
       return;
@@ -505,8 +683,10 @@ const router = express.Router();
 
 router.post("/sign-in", signInProc);
 router.post("/sign-up", signUpProc);
-router.post("/validate-google-account", validateGoogleAccount);
-router.post("/sign-in-with-google", signInWithGoogle);
+router.post("/validate-google-account", validateGoogleAccountProc);
+router.post("/sign-in-with-google", signInWithGoogleProc);
+router.post("/validate-facebook-account", validateFacebookAccountProc);
+router.post("/sign-in-with-facebook", signInWithFacebookProc);
 router.post("/send-forgot-password-mail", sendForgotPasswordMailProc);
 router.post("/validate-token", validateTokenProc);
 router.post("/reset-password", resetPasswordProc);
