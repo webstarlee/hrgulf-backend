@@ -1,0 +1,52 @@
+{
+  "name": "hrgulf-recruitment",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./backend/server.production.js",
+    "startDev": "node ./bin/start-webapp",
+    "startMon": "nodemon ./backend/server.development.js",
+    "startProd": "node ./backend/server.production.js",
+    "buildProd": "rimraf backend/server.production.js && webpack --mode production --config webpack.config.js",
+    "buildDev": "rimraf backend/server.development.js && webpack --mode development --config webpack.config.js --watch"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "dateformat": "^3.0.3",
+    "ddos": "^0.2.1",
+    "debug": "~4.1.1",
+    "email-templates": "^7.0.2",
+    "express": "~4.17.1",
+    "express-form-data": "^2.0.11",
+    "express-jwt": "^5.3.1",
+    "helmet": "^3.21.2",
+    "http-errors": "~1.7.3",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mkdirp": "^1.0.3",
+    "morgan": "~1.9.1",
+    "mysql2": "^2.1.0",
+    "nodemailer": "^6.4.2",
+    "pug": "2.0.4",
+    "sprintf-js": "^1.1.2",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "app-module-path": "^2.2.0",
+    "babel-loader": "^8.0.6",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "tracer": "^1.0.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2",
+    "webpack-obfuscator": "^0.24.6"
+  }
+}

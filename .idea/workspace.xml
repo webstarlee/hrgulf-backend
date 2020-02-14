@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="94355cba-f9a1-465b-9a7c-116d23c67450" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XefC1STEFr20CEZdhj248Y2qcU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="10.16.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/routes/api" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="restartRequiresConfirmation" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\1_Work\React_Work\hrgulf\recruitment\backend" />
+      <recent name="F:\1_Work\React_Work\hrgulf\recruitment\backend\src" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\1_Work\React_Work\hrgulf\recruitment\backend\src\routes\api" />
+      <recent name="F:\1_Work\React_Work\hrgulf\recruitment\backend\src\core" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.startMon">
+    <configuration name="start-webapp" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/bin/start-webapp" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="buildDev" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="buildDev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="buildProd" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="buildProd" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="startMon" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="startMon" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="startProd" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="startProd" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.start-webapp" />
+      <item itemvalue="npm.buildDev" />
+      <item itemvalue="npm.startMon" />
+      <item itemvalue="npm.buildProd" />
+      <item itemvalue="npm.startProd" />
+    </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="94355cba-f9a1-465b-9a7c-116d23c67450" name="Default Changelist" comment="" />
+      <created>1581411349897</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1581411349897</updated>
+      <workItem from="1581411352355" duration="567000" />
+      <workItem from="1581411973368" duration="2037000" />
+      <workItem from="1581421784796" duration="15419000" />
+      <workItem from="1581628250489" duration="16178000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="447" y="273" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581412181519">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state x="447" y="273" key="#com.intellij.execution.impl.EditConfigurationsDialog/64.0.1856.1080@64.0.1856.1080" timestamp="1581412181519" />
+    <state x="742" y="357" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1581459991582">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state x="742" y="357" key="#com.intellij.fileTypes.FileTypeChooser/64.0.1856.1080@64.0.1856.1080" timestamp="1581459991582" />
+    <state x="773" y="373" key="FileChooserDialogImpl" timestamp="1581412677765">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state x="773" y="373" key="FileChooserDialogImpl/64.0.1856.1080@64.0.1856.1080" timestamp="1581412677765" />
+    <state width="1813" height="295" key="GridCell.Tab.0.bottom" timestamp="1581718175227">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state width="1813" height="295" key="GridCell.Tab.0.bottom/64.0.1856.1080@64.0.1856.1080" timestamp="1581718175227" />
+    <state width="1813" height="295" key="GridCell.Tab.0.center" timestamp="1581718175227">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state width="1813" height="295" key="GridCell.Tab.0.center/64.0.1856.1080@64.0.1856.1080" timestamp="1581718175227" />
+    <state width="1813" height="295" key="GridCell.Tab.0.left" timestamp="1581718175227">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state width="1813" height="295" key="GridCell.Tab.0.left/64.0.1856.1080@64.0.1856.1080" timestamp="1581718175227" />
+    <state width="1813" height="295" key="GridCell.Tab.0.right" timestamp="1581718175227">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state width="1813" height="295" key="GridCell.Tab.0.right/64.0.1856.1080@64.0.1856.1080" timestamp="1581718175227" />
+    <state x="688" y="291" width="737" height="526" key="find.popup" timestamp="1581682710530">
+      <screen x="64" y="0" width="1856" height="1080" />
+    </state>
+    <state x="688" y="291" width="737" height="526" key="find.popup/64.0.1856.1080@64.0.1856.1080" timestamp="1581682710530" />
+  </component>
+</project>
