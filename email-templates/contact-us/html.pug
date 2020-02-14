@@ -1,0 +1,29 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css')
+    style(type='text/css').
+      .information-spec span {
+        font-weight: bold;
+      }
+      .rtl-content {
+        text-align: right;
+      }
+      .rtl-content .text-left {
+        text-align: right !important;
+      }
+  body
+    .rtl-content.mt-5(dir='rtl')
+      p.text-left.w-responsive.mx-auto.my-2 اتصل بن(Contact Us)
+      p.text-left.w-responsive.mx-auto.my-1.information-spec
+        | اسمك(Name):
+        span #{name}
+      p.text-left.w-responsive.mx-auto.my-1.information-spec
+        | بريدك الالكتروني(Email):
+        span #{email}
+      p.text-left.w-responsive.mx-auto.my-1.information-spec
+        | موضوع(Subject):
+        span #{subject}
+      p.text-left.w-responsive.mx-auto.my-1.information-spec رسالتك(Message):
+      p.text-left.w-responsive.mx-auto.my-1.information-spec #{message}
