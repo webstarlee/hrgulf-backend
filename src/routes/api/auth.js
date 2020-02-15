@@ -46,7 +46,7 @@ const _validateToken = async (req, res, next) => {
 const _validateGoogleAccount = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {email, id_token} = req.body;
+  const {googleId, email, id_token} = req.body;
 
   const url = "https://www.googleapis.com/oauth2/v3/tokeninfo";
   const params = {
@@ -55,20 +55,25 @@ const _validateGoogleAccount = async (req, res, next) => {
 
   try {
     const data = await fetch(GET, url, params);
-    let sql = sprintf("SELECT * FROM `%s` WHERE `email` = ?;", dbTblName.users);
-    sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.email = ?;", dbTblName.users, dbTblName.accountSettings);
-    // let sql = sprintf("SELECT * FROM `%s` WHERE `email` = ? AND `social` = ?;", dbTblName.users);
+    let sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.social = ? AND U.socialId = ?;", dbTblName.users, dbTblName.accountSettings);
 
-    const rows = await db.query(sql, [data.email, social.name.GOOGLE]);
+    let rows = await db.query(sql, [social.name.GOOGLE, data.sub]);
 
-    const registered = !!rows.length;
-    const invalidToken = data.email !== email;
+    let registered = !!rows.length;
+    const invalidToken = data.sub !== googleId;
 
     let result = {...data, registered, invalidToken};
     if (!!registered) {
-      const hash = myCrypto.hmacHex(auth.SOCIAL_SIGN_UP_PASSWORD);
       result = Object.assign({}, result, {...rows[0], accountType: rows[0]["accountType"] || accountTypes.WORK})
     }
+
+    sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.email = ?;", dbTblName.users, dbTblName.accountSettings);
+
+    rows = await db.query(sql, [data.email, social.name.GOOGLE]);
+
+    registered = !!rows.length;
+
+    result = {...result, emailRegistered: registered};
 
     return result;
   } catch (err) {
@@ -166,7 +171,7 @@ const signInProc = async (req, res, next) => {
 const signUpProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {social, email, password, username, firstName, fatherName, lastName, countryCode, phone} = req.body;
+  const {social, socialId, email, password, username, firstName, fatherName, lastName, countryCode, phone} = req.body;
   const hash = myCrypto.hmacHex(!!social ? auth.SOCIAL_SIGN_UP_PASSWORD : password);
   const today = new Date();
   const date = dateformat(today, "yyyy-mm-dd");
@@ -183,7 +188,7 @@ const signUpProc = async (req, res, next) => {
       return;
     }
     const newRows = [
-      [null, social || "", email, hash, username, firstName, fatherName, lastName, countryCode, phone, "", "", date, date, "", ""],
+      [null, social || "", socialId || "", email, hash, username, firstName, fatherName, lastName, countryCode, phone, "", "", date, date, "", ""],
     ];
     sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.users);
     await db.query(sql, [newRows]);
@@ -211,9 +216,17 @@ const validateGoogleAccount = async (req, res, next) => {
 
   try {
     const data = await _validateGoogleAccount(req, res, next);
-
     const registered = data.registered;
     if (registered) {
+      res.status(200).send({
+        result: langs.error,
+        message: langs.accountIsAlreadyRegistered,
+        data,
+      });
+      return;
+    }
+    const emailRegistered = data.emailRegistered;
+    if (emailRegistered) {
       res.status(200).send({
         result: langs.error,
         message: langs.emailAlreadyRegistered,
@@ -251,16 +264,25 @@ const signInWithGoogle = async (req, res, next) => {
 
   try {
     const user = await _validateGoogleAccount(req, res, next);
-
+    tracer.info(user);
     const registered = user.registered;
     if (!registered) {
       res.status(200).send({
         result: langs.error,
-        message: langs.emailIsNotRegistered,
+        message: langs.accountIsNotRegistered,
         user,
       });
       return;
     }
+    // const emailRegistered = user.emailRegistered;
+    // if (!emailRegistered) {
+    //   res.status(200).send({
+    //     result: langs.error,
+    //     message: langs.emailIsNotRegistered,
+    //     user,
+    //   });
+    //   return;
+    // }
     if (user.social !== social.name.GOOGLE) {
       res.status(200).send({
         result: langs.error,
