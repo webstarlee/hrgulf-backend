@@ -46,6 +46,8 @@ export default {
   tokenIsNotFound: "الرمز غير صالح. أعد المحاولة لإعادة تعيين كلمة المرور.",
   tokenIsAlreadyUsed: "Token يستخدم بالفعل. أعد المحاولة لإعادة تعيين كلمة المرور.",
   accountIsInvalid: "حسابك غير صالح. حاول مع واحد آخر.",
+  accountIsNotRegistered: "حسابك غير مسجل. حاول مع واحد آخر.",
+  accountIsAlreadyRegistered: "حسابك مسجل بالفعل. حاول مع واحد آخر.",
   yourAccountDoesNotSupportGoogleAuth: "حسابك لا يدعم تسجيل الدخول إلى Google. جرب طريقة أخرى.",
   yourAccountDoesNotSupportFacebookAuth: "حسابك لا يدعم Facebook Login. جرب طريقة أخرى.",
 };

@@ -46,6 +46,8 @@ export default {
   tokenIsNotFound: "Token is invalid. Retry to reset the password.",
   tokenIsAlreadyUsed: "Token is already used. Retry to reset the password.",
   accountIsInvalid: "Your account is invalid. Try with another one.",
+  accountIsNotRegistered: "Your account is not registered. Try with another one.",
+  accountIsAlreadyRegistered: "Your account is already registered. Try with another one.",
   yourAccountDoesNotSupportGoogleAuth: "Your account does not support Google Login. Try another way.",
   yourAccountDoesNotSupportFacebookAuth: "Your account does not support Facebook Login. Try another way.",
 };
