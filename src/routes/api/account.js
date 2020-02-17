@@ -84,7 +84,7 @@ const saveAvatarProc = async (req, res, next) => {
   let sql;
   let rows;
   let row;
-  if (id) {
+  if (!!id) {
     sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.userAvatars);
     rows = await db.query(sql, [id]);
     if (rows.length > 0) {
