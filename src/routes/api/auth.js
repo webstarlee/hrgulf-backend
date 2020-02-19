@@ -179,11 +179,14 @@ const signInProc = async (req, res, next) => {
     sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
     await db.query(sql, [newRows]);
 
+    const accountType = user["accountType"] || accountTypes.WORK;
+
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySignedIn,
       data: {
-        user: {...user, accountType: user["accountType"] || accountTypes.WORK},
+        user: {...user, accountType},
+        account: {type: accountType},
         token,
       },
     });
@@ -369,11 +372,14 @@ const signInWithGoogleProc = async (req, res, next) => {
     let sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
     await db.query(sql, [newRows]);
 
+    const accountType = user["accountType"] || accountTypes.WORK;
+
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySignedIn,
       data: {
-        user,
+        user: {...user, accountType},
+        account: {type: accountType},
         token,
       },
     });
@@ -516,12 +522,14 @@ const signInWithFacebookProc = async (req, res, next) => {
     ];
     let sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
     await db.query(sql, [newRows]);
+    const accountType = user["accountType"] || accountTypes.WORK;
 
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySignedIn,
       data: {
-        user,
+        user: {...user, accountType},
+        account: {type: accountType},
         token,
       },
     });

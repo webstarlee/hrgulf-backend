@@ -10,7 +10,8 @@ import strings from "core/strings";
 import tracer from "core/tracer";
 import consts, {avatar} from "core/consts";
 import myCrypto from "core/myCrypto";
-import helpers from "../../core/helpers";
+import helpers from "core/helpers";
+import {accountTypes} from "core/consts";
 
 const avatarProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -142,31 +143,37 @@ const savePersonalInfo = async (req, res, next) => {
     sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.id = ?;", dbTblName.users, dbTblName.accountSettings);
     let rows = await db.query(sql, [id]);
 
-    if (!!rows.length) {
-      const token = jwt.sign(
-        {
-          id: id,
-          email: rows[0].email,
-          firstName: firstName,
-          fatherName: fatherName,
-          lastName: lastName,
-        },
-        session.secret
-      );
-      res.status(200).send({
-        result: langs.success,
-        message: langs.successfullySaved,
-        data: {
-          user: rows[0],
-          token,
-        },
-      });
-    } else {
+    if (rows.length === 0) {
       res.status(200).send({
         result: langs.error,
         message: langs.invalidUser,
       });
+      return;
     }
+
+    const user = rows[0];
+
+    const token = jwt.sign(
+      {
+        id: id,
+        email: user.email,
+        firstName: firstName,
+        fatherName: fatherName,
+        lastName: lastName,
+      },
+      session.secret
+    );
+
+    const accountType = user["accountType"] || accountTypes.WORK;
+    res.status(200).send({
+      result: langs.success,
+      message: langs.successfullySaved,
+      data: {
+        user: {...user, accountType},
+        account: {type: accountType},
+        token,
+      },
+    });
   } catch (err) {
     tracer.error(JSON.stringify(err));
     tracer.error(__filename);
@@ -218,38 +225,47 @@ const changeAccountTypeProc = async (req, res, next) => {
   const langs = strings[lang];
   let {id, type} = req.body;
 
-  let sql = sprintf("UPDATE `%s` SET `accountType` = ? WHERE `id` = ?;", dbTblName.accountSettings);
+  let sql = sprintf("INSERT INTO `%s`(`id`, `accountType`) VALUES ? ON DUPLICATE KEY UPDATE `accountType` = VALUES(`accountType`);", dbTblName.accountSettings);
+  let newRows = [
+    [id, type],
+  ];
   try {
-    await db.query(sql, [type, id]);
+    await db.query(sql, [newRows]);
 
     sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.id = ?;", dbTblName.users, dbTblName.accountSettings);
     let rows = await db.query(sql, [id]);
 
-    if (!!rows.length) {
-      const token = jwt.sign(
-        {
-          id: id,
-          email: rows[0].email,
-          firstName: rows[0].firstName,
-          fatherName: rows[0].fatherName,
-          lastName: rows[0].lastName,
-        },
-        session.secret
-      );
-      res.status(200).send({
-        result: langs.success,
-        message: langs.successfullyChanged,
-        data: {
-          user: rows[0],
-          token,
-        },
-      });
-    } else {
+    if (rows.length === 0) {
       res.status(200).send({
         result: langs.error,
         message: langs.invalidUser,
       });
+      return;
     }
+
+    const user = rows[0];
+
+    const token = jwt.sign(
+      {
+        id: id,
+        email: user.email,
+        firstName: user.firstName,
+        fatherName: user.fatherName,
+        lastName: user.lastName,
+      },
+      session.secret
+    );
+
+    const accountType = user["accountType"] || accountTypes.WORK;
+    res.status(200).send({
+      result: langs.success,
+      message: langs.successfullyChanged,
+      data: {
+        user: {...user, accountType},
+        account: {type: accountType},
+        token,
+      },
+    });
   } catch (err) {
     tracer.error(JSON.stringify(err));
     tracer.error(__filename);
