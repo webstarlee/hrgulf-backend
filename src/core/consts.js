@@ -1,7 +1,10 @@
 export const uploadPath = {
-  posts: "uploads/posts",
-  news: "uploads/news",
   avatars: "uploads/avatars",
+  hire: {
+    workplace: {
+      letters: "uploads/hire/workplace",
+    },
+  },
   aboutUs: "uploads/about-us",
 };
 export const success = "success";
