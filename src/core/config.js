@@ -34,6 +34,8 @@ const dbTblName = {
   userAvatars: "user_avatars",
   accountSettings: "account_settings",
 
+  hireLetters: "hire_letters",
+
   resetPasswordTokens: "reset_password_tokens",
 };
 
