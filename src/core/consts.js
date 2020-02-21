@@ -2,7 +2,8 @@ export const uploadPath = {
   avatars: "uploads/avatars",
   hire: {
     workplace: {
-      letters: "uploads/hire/workplace",
+      letters: "uploads/hire/workplace/letters",
+      myCompanyProfiles: "uploads/hire/workplace/my-company-profiles",
     },
   },
   aboutUs: "uploads/about-us",
