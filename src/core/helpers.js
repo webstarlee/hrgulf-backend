@@ -82,7 +82,6 @@ export default {
     const orderClause = _makeOrderClause(orders);
 
     let sql = sprintf("SELECT * FROM `%s` %s %s LIMIT ?, ?;", table, whereClause, orderClause);
-    console.log(sql, values);
     try {
       let rows = await db.query(sql, [...values, start, limit]);
       sql = sprintf("SELECT COUNT(*) `count` FROM `%s` %s;", table, whereClause);
@@ -105,8 +104,6 @@ export default {
     const orderClause = _makeOrderClause(orders);
 
     let sql = sprintf("SELECT * FROM `%s` %s %s LIMIT 1;", table, whereClause, orderClause);
-
-    tracer.info(sql, values);
     try {
       let rows = await db.query(sql, values);
 

@@ -84,9 +84,7 @@ const saveProc = async (req, res, next) => {
   if (!fileName.length) {
     attachment = !!row ? row.attachment : "";
   }
-  tracer.info("aaa");
   const attached = !!attachment.length;
-  tracer.info("333");
 
   const newRows = [
     [id, userId, type, name, subject, message, attached, attachment, ""],
