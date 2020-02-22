@@ -8,10 +8,10 @@ import massEmailRouter from "./admin-api/mass-email";
 
 const router = express.Router();
 
-router.use("/auth", authRouter);
-router.use("/profile",profileRouter);
-router.use("/users", usersRouter);
-router.use("/about", aboutRouter);
-router.use("/mass-email", massEmailRouter);
+// router.use("/auth", authRouter);
+// router.use("/profile",profileRouter);
+// router.use("/users", usersRouter);
+// router.use("/about", aboutRouter);
+// router.use("/mass-email", massEmailRouter);
 
 export default router;
