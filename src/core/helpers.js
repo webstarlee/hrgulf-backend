@@ -14,6 +14,14 @@ const _calculateStartPosition = (page, pageSize) => {
   return [start, pageSize];
 };
 
+const _makeLimitClause = (page, pageSize) => {
+  if (!!page) {
+    const [start, limit] = _calculateStartPosition(page, pageSize);
+    return sprintf("LIMIT %d, %d", start, limit);
+  }
+  return "";
+};
+
 const _makeWhereClause = conditions => {
   let conditionArr = [];
   let values = [];
@@ -76,14 +84,15 @@ export default {
     });
   },
 
-  listQuery: async ({table, page, pageSize, conditions, orders}) => {
-    const [start, limit] = _calculateStartPosition(page, pageSize);
+  listQuery: async ({table, conditions, orders, page, pageSize}) => {
     const [whereClause, values] = _makeWhereClause(conditions);
     const orderClause = _makeOrderClause(orders);
+    const limitClause = _makeLimitClause(page, pageSize);
+    const [start, limit] = _calculateStartPosition(page, pageSize);
 
-    let sql = sprintf("SELECT * FROM `%s` %s %s LIMIT ?, ?;", table, whereClause, orderClause);
+    let sql = sprintf("SELECT * FROM `%s` %s %s %s;", table, whereClause, orderClause, limitClause);
     try {
-      let rows = await db.query(sql, [...values, start, limit]);
+      let rows = await db.query(sql, values);
       sql = sprintf("SELECT COUNT(*) `count` FROM `%s` %s;", table, whereClause);
       let count = await db.query(sql, values);
       let pageCount = 0;

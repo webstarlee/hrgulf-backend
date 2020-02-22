@@ -1,11 +1,9 @@
 import express from "express";
 
-import lettersRouter from "./hire/letters";
-import myCompanyProfilesRouter from "./hire/my-company-profiles";
+import workplaceRouter from "./hire/workplace";
 
 const router = express.Router();
 
-router.use("/letters", lettersRouter);
-router.use("/my-company-profiles", myCompanyProfilesRouter);
+router.use("/workplace", workplaceRouter);
 
 export default router;
