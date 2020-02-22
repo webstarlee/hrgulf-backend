@@ -1,5 +1,4 @@
 import express from "express";
-import expressJwt from "express-jwt";
 import path from "path";
 import cookieParser from "cookie-parser";
 import formData from "express-form-data";
@@ -8,8 +7,6 @@ import logger from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import Ddos from "ddos";
-
-import {session} from "core/config";
 
 import apiRouter from "./routes/api";
 import adminApiRouter from "./routes/admin-api";
@@ -42,17 +39,6 @@ app.use(formData.union());
 
 process.env.NODE_ENV !== "production" && app.use(cors());
 app.use(helmet());
-// process.env.NODE_ENV === "production" && app.use(ddos.express);
-// app.use("/api/", ddos.express);
-//
-// app.use("/admin/api", expressJwt({secret: session.secretAdmin})
-//   .unless({
-//     path: [
-//       /\/admin\/api\/auth\/*/,
-//     ]
-//   }));
-//
-// app.use("/api/posts/save", expressJwt({secret: session.secret}));
 
 app.use("/admin/assets", express.static(path.join(cwd, "public")));
 app.use("/assets", express.static(path.join(cwd, "public")));
