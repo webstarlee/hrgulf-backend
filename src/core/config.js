@@ -34,8 +34,13 @@ const dbTblName = {
   userAvatars: "user_avatars",
   accountSettings: "account_settings",
 
+  hireQuestionnaire: "hire_questionnaire",
+  hireQuestionnaireQuestions: "hire_questionnaire_questions",
+  hireQuestionnaireAnswers: "hire_questionnaire_answers",
   hireLetters: "hire_letters",
   hireMyCompanyProfiles: "hire_my_company_profiles",
+  hireEmployerTestDepartments: "hire_employer_test_departments",
+  hireEmployerTestCategories: "hire_employer_test_categories",
 
   resetPasswordTokens: "reset_password_tokens",
 };

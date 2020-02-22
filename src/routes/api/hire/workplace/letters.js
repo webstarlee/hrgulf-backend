@@ -31,7 +31,7 @@ const _listItems = async (req, res, next) => {
         value: type,
       }
     }
-    const data = await helpers.listQuery({table: dbTblName.hireLetters, page, pageSize, conditions});
+    const data = await helpers.listQuery({table: dbTblName.hireLetters, conditions, page: page || 1, pageSize});
 
     res.status(200).send({
       result: langs.success,
