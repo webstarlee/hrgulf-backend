@@ -22,7 +22,7 @@ const loadSalaryProc = async (req, res, next) => {
   };
 
   try {
-    let data = await helpers.getQuery({table: dbTblName.hireMyCompanyProfiles, conditions});
+    let data = await helpers.getQuery({table: dbTblName.hire.my_company_profiles, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -57,7 +57,7 @@ const saveSalaryProc = async (req, res, next) => {
   const newRows = [
     [id, unit, min, max, "", "", "", ""],
   ];
-  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `salaryUnit` = VALUES(`salaryUnit`), `salaryMin` = VALUES(`salaryMin`), `salaryMax` = VALUES(`salaryMax`);", dbTblName.hireMyCompanyProfiles);
+  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `salaryUnit` = VALUES(`salaryUnit`), `salaryMin` = VALUES(`salaryMin`), `salaryMax` = VALUES(`salaryMax`);", dbTblName.hire.my_company_profiles);
   try {
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({
@@ -89,7 +89,7 @@ const loadAboutProc = async (req, res, next) => {
   };
 
   try {
-    let data = await helpers.getQuery({table: dbTblName.hireMyCompanyProfiles, conditions});
+    let data = await helpers.getQuery({table: dbTblName.hire.my_company_profiles, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -122,7 +122,7 @@ const saveAboutProc = async (req, res, next) => {
   const newRows = [
     [id, "", 0, 0, value, "", "", ""],
   ];
-  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `about` = VALUES(`about`);", dbTblName.hireMyCompanyProfiles);
+  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `about` = VALUES(`about`);", dbTblName.hire.my_company_profiles);
   try {
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({
@@ -154,7 +154,7 @@ const loadVisionProc = async (req, res, next) => {
   };
 
   try {
-    let data = await helpers.getQuery({table: dbTblName.hireMyCompanyProfiles, conditions});
+    let data = await helpers.getQuery({table: dbTblName.hire.my_company_profiles, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -187,7 +187,7 @@ const saveVisionProc = async (req, res, next) => {
   const newRows = [
     [id, "", 0, 0, "", value, "", ""],
   ];
-  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `vision` = VALUES(`vision`);", dbTblName.hireMyCompanyProfiles);
+  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `vision` = VALUES(`vision`);", dbTblName.hire.my_company_profiles);
   try {
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({
@@ -219,7 +219,7 @@ const loadMissionProc = async (req, res, next) => {
   };
 
   try {
-    let data = await helpers.getQuery({table: dbTblName.hireMyCompanyProfiles, conditions});
+    let data = await helpers.getQuery({table: dbTblName.hire.my_company_profiles, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -252,7 +252,7 @@ const saveMissionProc = async (req, res, next) => {
   const newRows = [
     [id, "", 0, 0, "", "", value, ""],
   ];
-  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `mission` = VALUES(`mission`);", dbTblName.hireMyCompanyProfiles);
+  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `mission` = VALUES(`mission`);", dbTblName.hire.my_company_profiles);
   try {
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({
@@ -284,7 +284,7 @@ const loadCoverPhotoProc = async (req, res, next) => {
   };
 
   try {
-    let data = await helpers.getQuery({table: dbTblName.hireMyCompanyProfiles, conditions});
+    let data = await helpers.getQuery({table: dbTblName.hire.my_company_profiles, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -324,7 +324,7 @@ const saveCoverPhotoProc = async (req, res, next) => {
   let rows, row;
   let sql
   if (!!id) {
-    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.hireMyCompanyProfiles);
+    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.hire.my_company_profiles);
     rows = await db.query(sql, [id]);
     if (rows.length > 0) {
       row = rows[0];
@@ -338,7 +338,7 @@ const saveCoverPhotoProc = async (req, res, next) => {
   const newRows = [
     [id, "", 0, 0, "", "", "", !!file ? coverPhoto : ""],
   ];
-  sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `coverPhoto` = VALUES(`coverPhoto`);", dbTblName.hireMyCompanyProfiles);
+  sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `coverPhoto` = VALUES(`coverPhoto`);", dbTblName.hire.my_company_profiles);
   try {
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({

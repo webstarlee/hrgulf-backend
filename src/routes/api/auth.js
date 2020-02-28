@@ -116,7 +116,7 @@ const signInProc = async (req, res, next) => {
   const langs = strings[lang];
   const {email, password} = req.body;
 
-  let sql = sprintf("SELECT `email` FROM `%s` WHERE `email` = ?;", dbTblName.users);
+  let sql = sprintf("SELECT `email` FROM `%s` WHERE `email` = ?;", dbTblName.core.users);
   try {
     let rows = await db.query(sql, [email]);
     if (rows.length === 0) {
@@ -128,7 +128,7 @@ const signInProc = async (req, res, next) => {
     }
 
     const hash = myCrypto.hmacHex(password);
-    sql = sprintf("SELECT U.*, A.accountType FROM `%s` U LEFT JOIN `%s` A ON A.id = U.id WHERE U.email = ? AND BINARY U.hash = ?;", dbTblName.users, dbTblName.accountSettings);
+    sql = sprintf("SELECT * FROM `%s` WHERE `email` = ? AND BINARY `hash` = ?;", dbTblName.core.users);
     rows = await db.query(sql, [email, hash]);
 
     if (rows.length === 0) {
@@ -157,6 +157,12 @@ const signInProc = async (req, res, next) => {
       return;
     }
 
+    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.hire.accounts);
+    const hire = await db.query(sql, [user.hireId]);
+
+    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?", dbTblName.work.accounts);
+    const work = await db.query(sql, [user.workId]);
+
     const token = jwt.sign(
       {
         id: user["id"],
@@ -176,7 +182,7 @@ const signInProc = async (req, res, next) => {
     const newRows = [
       [null, user.id, timestamp, date, time, remoteAddress]
     ];
-    sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
+    sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.core.signInHistory);
     await db.query(sql, [newRows]);
 
     const accountType = user["accountType"] || accountTypes.WORK;
@@ -185,8 +191,9 @@ const signInProc = async (req, res, next) => {
       result: langs.success,
       message: langs.successfullySignedIn,
       data: {
-        user: {...user, accountType},
-        account: {type: accountType},
+        user: {...user},
+        hire: !!hire.length ? hire[0] : {},
+        work: !!work.length ? work[0] : {},
         token,
       },
     });
@@ -196,349 +203,6 @@ const signInProc = async (req, res, next) => {
     res.status(200).send({
       result: langs.error,
       message: langs.unknownServerError,
-      err,
-    });
-  }
-};
-
-const signUpProc = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
-  const {social, socialId, email, password, username, firstName, fatherName, lastName, countryCode, phone} = req.body;
-  const hash = myCrypto.hmacHex(!!social ? auth.SOCIAL_SIGN_UP_PASSWORD : password);
-  const today = new Date();
-  const date = dateformat(today, "yyyy-mm-dd");
-  const timestamp = today.toISOString();
-
-  let sql = sprintf("SELECT `email` FROM `%s` WHERE `email` = ?;", dbTblName.users);
-  try {
-    let rows = await db.query(sql, [email]);
-    if (rows.length > 0) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.emailAlreadyRegistered,
-      });
-      return;
-    }
-    const newRows = [
-      [null, social || "", socialId || "", email || "", hash, username, firstName, fatherName, lastName, countryCode, phone, "", "", date, date, "", ""],
-    ];
-    sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.users);
-    await db.query(sql, [newRows]);
-
-    // sendVerificationEmail(email);
-
-    res.status(200).send({
-      result: langs.success,
-      message: langs.successfullyRegistered,
-    });
-  } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
-  }
-};
-
-const validateGoogleAccountProc = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
-
-  try {
-    const data = await _validateGoogleAccount(req, res, next);
-    const registered = data.registered;
-    if (registered) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.accountIsAlreadyRegistered,
-        data,
-      });
-      return;
-    }
-    const emailRegistered = data.emailRegistered;
-    if (emailRegistered) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.emailAlreadyRegistered,
-        data,
-      });
-      return;
-    }
-    if (data.invalidToken) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.tokenIsValid,
-        data,
-      });
-      return;
-    }
-    // tracer.info(data);
-    res.status(200).send({
-      result: langs.success,
-      data,
-    });
-  } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.accountIsInvalid,
-      err,
-    });
-  }
-};
-
-const signInWithGoogleProc = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
-
-  try {
-    const user = await _validateGoogleAccount(req, res, next);
-    tracer.info(user);
-    const registered = user.registered;
-    if (!registered) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.accountIsNotRegistered,
-        user,
-      });
-      return;
-    }
-    // const emailRegistered = user.emailRegistered;
-    // if (!emailRegistered) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.emailIsNotRegistered,
-    //     user,
-    //   });
-    //   return;
-    // }
-    if (user.social !== social.name.GOOGLE) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountDoesNotSupportGoogleAuth,
-        user,
-      });
-      return;
-    }
-    //
-    // if (data.social !== social.name.GOOGLE) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.emailIsNotRegistered,
-    //     data,
-    //   });
-    //   return;
-    // }
-
-    if (user.deletedDate.length > 0) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountIsClosed,
-      });
-      return;
-    }
-
-    if (user.allowedDate.length === 0) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountIsNotAllowed,
-      });
-      return;
-    }
-
-    const token = jwt.sign(
-      {
-        id: user["id"],
-        email: user["email"],
-        firstName: user["firstName"],
-        fatherName: user["fatherName"],
-        lastName: user["lastName"],
-      },
-      session.secret
-    );
-
-    const today = new Date();
-    const date = dateformat(today, "yyyy-mm-dd");
-    const time = dateformat(today, "hh:MM TT");
-    const timestamp = today.getTime();
-    const remoteAddress = req.header["x-forwarded-for"] || req.connection.remoteAddress;
-    const newRows = [
-      [null, user.id, timestamp, date, time, remoteAddress]
-    ];
-    let sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
-    await db.query(sql, [newRows]);
-
-    const accountType = user["accountType"] || accountTypes.WORK;
-
-    res.status(200).send({
-      result: langs.success,
-      message: langs.successfullySignedIn,
-      data: {
-        user: {...user, accountType},
-        account: {type: accountType},
-        token,
-      },
-    });
-  } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.accountIsInvalid,
-      err,
-    });
-  }
-};
-
-const validateFacebookAccountProc = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
-
-  try {
-    const data = await _validateFacebookAccount(req, res, next);
-    const registered = data.registered;
-    if (registered) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.accountIsAlreadyRegistered,
-        data,
-      });
-      return;
-    }
-    // const emailRegistered = data.emailRegistered;
-    // if (emailRegistered) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.emailAlreadyRegistered,
-    //     data,
-    //   });
-    //   return;
-    // }
-    // if (data.invalidToken) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.tokenIsValid,
-    //     data,
-    //   });
-    //   return;
-    // }
-    // tracer.info(data);
-    res.status(200).send({
-      result: langs.success,
-      data,
-    });
-  } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.accountIsInvalid,
-      err,
-    });
-  }
-};
-
-const signInWithFacebookProc = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
-
-  try {
-    const user = await _validateFacebookAccount(req, res, next);
-    tracer.info(user);
-    const registered = user.registered;
-    if (!registered) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.accountIsNotRegistered,
-        user,
-      });
-      return;
-    }
-    // const emailRegistered = user.emailRegistered;
-    // if (!emailRegistered) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.emailIsNotRegistered,
-    //     user,
-    //   });
-    //   return;
-    // }
-    if (user.social !== social.name.FACEBOOK) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountDoesNotSupportFacebookAuth,
-        user,
-      });
-      return;
-    }
-    //
-    // if (data.social !== social.name.GOOGLE) {
-    //   res.status(200).send({
-    //     result: langs.error,
-    //     message: langs.emailIsNotRegistered,
-    //     data,
-    //   });
-    //   return;
-    // }
-
-    if (user.deletedDate.length > 0) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountIsClosed,
-      });
-      return;
-    }
-
-    if (user.allowedDate.length === 0) {
-      res.status(200).send({
-        result: langs.error,
-        message: langs.yourAccountIsNotAllowed,
-      });
-      return;
-    }
-
-    const token = jwt.sign(
-      {
-        id: user["id"],
-        email: user["email"],
-        firstName: user["firstName"],
-        fatherName: user["fatherName"],
-        lastName: user["lastName"],
-      },
-      session.secret
-    );
-
-    const today = new Date();
-    const date = dateformat(today, "yyyy-mm-dd");
-    const time = dateformat(today, "hh:MM TT");
-    const timestamp = today.getTime();
-    const remoteAddress = req.header["x-forwarded-for"] || req.connection.remoteAddress;
-    const newRows = [
-      [null, user.id, timestamp, date, time, remoteAddress]
-    ];
-    let sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.usersSigninHistory);
-    await db.query(sql, [newRows]);
-    const accountType = user["accountType"] || accountTypes.WORK;
-
-    res.status(200).send({
-      result: langs.success,
-      message: langs.successfullySignedIn,
-      data: {
-        user: {...user, accountType},
-        account: {type: accountType},
-        token,
-      },
-    });
-  } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.accountIsInvalid,
       err,
     });
   }
@@ -690,11 +354,6 @@ const resetPasswordProc = async (req, res, next) => {
 const router = express.Router();
 
 router.post("/sign-in", signInProc);
-router.post("/sign-up", signUpProc);
-router.post("/validate-google-account", validateGoogleAccountProc);
-router.post("/sign-in-with-google", signInWithGoogleProc);
-router.post("/validate-facebook-account", validateFacebookAccountProc);
-router.post("/sign-in-with-facebook", signInWithFacebookProc);
 router.post("/send-forgot-password-mail", sendForgotPasswordMailProc);
 router.post("/validate-token", validateTokenProc);
 router.post("/reset-password", resetPasswordProc);

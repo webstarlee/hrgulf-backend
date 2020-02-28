@@ -29,18 +29,24 @@ const session = {
   secretAdmin: "knowledge.hrgulf.org_admin@@",
 };
 const dbTblName = {
-  users: "users",
-  usersSigninHistory: "users_signin_history",
-  userAvatars: "user_avatars",
-  accountSettings: "account_settings",
-
-  hireQuestionnaire: "hire_questionnaire",
-  hireQuestionnaireQuestions: "hire_questionnaire_questions",
-  hireQuestionnaireAnswers: "hire_questionnaire_answers",
-  hireLetters: "hire_letters",
-  hireMyCompanyProfiles: "hire_my_company_profiles",
-  hireEmployerTestDepartments: "hire_employer_test_departments",
-  hireEmployerTestCategories: "hire_employer_test_categories",
+  core: {
+    users: "core_users",
+    avatars: "core_avatars",
+    signInHistory: "core_sign_in_history",
+  },
+  hire: {
+    accounts: "hire_accounts",
+    questionnaire: {
+      main: "hire_questionnaire",
+      questions: "hire_questionnaire_questions",
+      answers: "answers",
+    },
+    letters: "hire_letters",
+    my_company_profiles: "hire_my_company_profiles",
+  },
+  work: {
+    accounts: "work_accounts",
+  },
 
   resetPasswordTokens: "reset_password_tokens",
 };
