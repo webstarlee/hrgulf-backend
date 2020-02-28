@@ -31,7 +31,7 @@ const _listItems = async (req, res, next) => {
         value: type,
       }
     }
-    const data = await helpers.listQuery({table: dbTblName.hireLetters, conditions, page: page || 1, pageSize});
+    const data = await helpers.listQuery({table: dbTblName.hire.letters, conditions, page: page || 1, pageSize});
 
     res.status(200).send({
       result: langs.success,
@@ -70,7 +70,7 @@ const saveProc = async (req, res, next) => {
   let rows;
   let row;
   if (!!id) {
-    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.hireLetters);
+    sql = sprintf("SELECT * FROM `%s` WHERE `id` = ?;", dbTblName.hire.letters);
     rows = await db.query(sql, [id]);
     if (rows.length > 0) {
       row = rows[0];
@@ -89,7 +89,7 @@ const saveProc = async (req, res, next) => {
   const newRows = [
     [id, userId, type, name, subject, message, attached, attachment, ""],
   ];
-  sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `name` = VALUES(`name`), `subject` = VALUES(`subject`), `message` = VALUES(`message`), `attached` = VALUES(`attached`), `attachment` = VALUES(`attachment`), `attachmentName` = VALUES(`attachmentName`);", dbTblName.hireLetters);
+  sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `name` = VALUES(`name`), `subject` = VALUES(`subject`), `message` = VALUES(`message`), `attached` = VALUES(`attached`), `attachment` = VALUES(`attachment`), `attachmentName` = VALUES(`attachmentName`);", dbTblName.hire.letters);
   try {
     rows = await db.query(sql, [newRows]);
     res.status(200).send({
@@ -121,7 +121,7 @@ const getProc = async (req, res, next) => {
   };
 
   try {
-    const data = await helpers.getQuery({table: dbTblName.hireLetters, conditions});
+    const data = await helpers.getQuery({table: dbTblName.hire.letters, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -157,7 +157,7 @@ const deleteProc = async (req, res, next) => {
   };
 
   try {
-    await helpers.deleteQuery({table: dbTblName.hireLetters, conditions});
+    await helpers.deleteQuery({table: dbTblName.hire.letters, conditions});
 
     await _listItems(req, res, next);
   } catch (err) {

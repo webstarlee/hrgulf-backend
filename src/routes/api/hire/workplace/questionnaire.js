@@ -25,7 +25,7 @@ const _listQuestionnaires = async (req, res, next) => {
         value: `%${keyword}%`,
       }
     };
-    const data = await helpers.listQuery({table: dbTblName.hireQuestionnaire, conditions, page: page || 1, pageSize});
+    const data = await helpers.listQuery({table: dbTblName.hire.questionnaire.main, conditions, page: page || 1, pageSize});
 
     res.status(200).send({
       result: langs.success,
@@ -54,7 +54,7 @@ const _listQuestions = async (req, res, next) => {
         value: questionnaireId,
       },
     };
-    const data = await helpers.listQuery({table: dbTblName.hireQuestionnaireQuestions, conditions, page: page || 1, pageSize});
+    const data = await helpers.listQuery({table: dbTblName.hire.questionnaire.questions, conditions, page: page || 1, pageSize});
 
     let index = 0;
     for (let row of data.data) {
@@ -83,15 +83,31 @@ const listProc = async (req, res, next) => {
 const saveProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {id, userId, name, description, filterByScore, minScore} = req.body;
+  const {questionnaire: {id, userId, name, description, filterByScore, minScore}, questions} = req.body;
 
-  const newRows = [
+  let newRows = [
     [id, userId, name, description, filterByScore, minScore],
   ];
 
   try {
-    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `description` = VALUES(`description`), `filterByScore` = VALUES(`filterByScore`), `minScore` = VALUES(`minScore`);", dbTblName.hireQuestionnaire);
+    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `description` = VALUES(`description`), `filterByScore` = VALUES(`filterByScore`), `minScore` = VALUES(`minScore`);", dbTblName.hire.questionnaire.main);
     let rows = await db.query(sql, [newRows]);
+
+    const questionnaireId = id || rows.insertId;
+    newRows = [];
+    // let preIds = [];
+    for (let row of questions) {
+      // !!row.id && preIds.push(row.id);
+      newRows.push([row.id, questionnaireId, row.question, row.type, row.required, row.answers, row.hasCorrectAnswer, row.correctAnswer]);
+      row["questionnaireId"] = questionnaireId;
+    }
+    // sql = sprintf("DELETE FROM `%s` WHERE `questionnaireId` = ? AND `id` NOT IN ?;", dbTblName.hire.questionnaire.questions);
+    // await db.query(sql, [questionnaireId, preIds.join(",")]);
+    sql = sprintf("DELETE FROM `%s` WHERE `questionnaireId` = ?;", dbTblName.hire.questionnaire.questions);
+    await db.query(sql, [questionnaireId]);
+    sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `question` = VALUES(`question`), `type` = VALUES(`type`), `required` = VALUES(`required`), `answers` = VALUES(`answers`), `hasCorrectAnswer` = VALUES(`hasCorrectAnswer`), `correctAnswer` = VALUES(`correctAnswer`);", dbTblName.hire.questionnaire.questions);
+    rows = await db.query(sql, [newRows]);
+
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySaved,
@@ -121,7 +137,7 @@ const getProc = async (req, res, next) => {
   };
 
   try {
-    const data = await helpers.getQuery({table: dbTblName.hireQuestionnaire, conditions});
+    const data = await helpers.getQuery({table: dbTblName.hire.questionnaire.main, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -157,7 +173,7 @@ const deleteProc = async (req, res, next) => {
   };
 
   try {
-    await helpers.deleteQuery({table: dbTblName.hireQuestionnaire, conditions});
+    await helpers.deleteQuery({table: dbTblName.hire.questionnaire.main, conditions});
 
     await _listQuestionnaires(req, res, next);
   } catch (err) {
@@ -185,7 +201,7 @@ const saveQuestionProc = async (req, res, next) => {
   ];
 
   try {
-    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `questionnaireId` = VALUES(`questionnaireId`), `question` = VALUES(`question`);", dbTblName.hireQuestionnaireQuestions);
+    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `questionnaireId` = VALUES(`questionnaireId`), `question` = VALUES(`question`);", dbTblName.hire.questionnaire.questions);
     let rows = await db.query(sql, [newRows]);
     res.status(200).send({
       result: langs.success,
@@ -216,7 +232,7 @@ const getQuestionProc = async (req, res, next) => {
   };
 
   try {
-    const data = await helpers.getQuery({table: dbTblName.hireQuestionnaireQuestions, conditions});
+    const data = await helpers.getQuery({table: dbTblName.hire.questionnaire.questions, conditions});
     if (!!data) {
       res.status(200).send({
         result: langs.success,
@@ -252,7 +268,7 @@ const deleteQuestionProc = async (req, res, next) => {
   };
 
   try {
-    await helpers.deleteQuery({table: dbTblName.hireQuestionnaireQuestions, conditions});
+    await helpers.deleteQuery({table: dbTblName.hire.questionnaire.questions, conditions});
 
     await _listQuestions(req, res, next);
   } catch (err) {
