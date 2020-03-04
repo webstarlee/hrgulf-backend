@@ -23,7 +23,11 @@ const _listItems = async (req, res, next) => {
       name: {
         type: "LIKE",
         value: `%${keyword}%`,
-      }
+      },
+      deletedDate: {
+        type: "=",
+        value: '',
+      },
     };
     if (!!type) {
       conditions["type"] = {
@@ -87,7 +91,7 @@ const saveProc = async (req, res, next) => {
   const attached = !!attachment.length;
 
   const newRows = [
-    [id, userId, type, name, subject, message, attached, attachment, ""],
+    [id, userId, type, name, subject, message, attached, attachment, "", ""],
   ];
   sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `name` = VALUES(`name`), `subject` = VALUES(`subject`), `message` = VALUES(`message`), `attached` = VALUES(`attached`), `attachment` = VALUES(`attachment`), `attachmentName` = VALUES(`attachmentName`);", dbTblName.hire.letters);
   try {

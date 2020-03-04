@@ -3,6 +3,7 @@ import {sprintf} from "sprintf-js";
 import uuid from "uuid";
 import fs from "fs";
 import mkdirp from "mkdirp";
+import dateformat from "dateformat";
 import db from "./db";
 import consts from "./consts";
 import tracer from "./tracer";
@@ -125,12 +126,14 @@ export default {
   deleteQuery: async ({table, conditions, orders}) => {
     const [whereClause, values] = _makeWhereClause(conditions);
     const orderClause = _makeOrderClause(orders);
+    const now = new Date();
+    const today = dateformat(now, "yyyy-mm-dd");
 
-    let sql = sprintf("DELETE FROM `%s` %s %s LIMIT 1;", table, whereClause, orderClause);
+    let sql = sprintf("UPDATE `%s` SET `deletedDate` = ? %s %s LIMIT 1;", table, whereClause, orderClause);
+    // let sql = sprintf("DELETE FROM `%s` %s %s LIMIT 1;", table, whereClause, orderClause);
 
-    tracer.info(sql, values);
     try {
-      let rows = await db.query(sql, values);
+      let rows = await db.query(sql, [today, ...values]);
 
       return rows;
     } catch (err) {

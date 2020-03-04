@@ -33,6 +33,17 @@ const dbTblName = {
     users: "core_users",
     avatars: "core_avatars",
     signInHistory: "core_sign_in_history",
+    jobRoles: "core_job_roles",
+    jobSubroles: "core_job_subroles",
+    sectors: "core_sectors",
+    industries: "core_industries",
+    countries: "core_countries",
+    cities: "core_cities",
+    employmentTypes: "core_employment_types",
+    salaryRanges: "core_salary_ranges",
+    careerLevels: "core_career_levels",
+    majors: "core_majors",
+    degrees: "core_degrees",
   },
   hire: {
     accounts: "hire_accounts",
@@ -42,6 +53,10 @@ const dbTblName = {
       answers: "answers",
     },
     letters: "hire_letters",
+    jobs: {
+      main: "hire_jobs",
+      candidateRequirements: "hire_job_candidate_requirements"
+    },
     my_company_profiles: "hire_my_company_profiles",
   },
   work: {
