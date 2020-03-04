@@ -3,6 +3,7 @@ import expressJwt from "express-jwt";
 import {session} from "core/config";
 
 import authRouter from "./api/auth";
+import coreRouter from "./api/core";
 import accountRouter from "./api/account";
 import hireRouter from "./api/hire";
 import profileRouter from "./api/profile";
@@ -18,6 +19,7 @@ router.use("/", expressJwt({secret: session.secret})
   }));
 
 router.use("/auth", authRouter);
+router.use("/core", coreRouter);
 router.use("/account", accountRouter);
 router.use("/hire", hireRouter);
 // router.use("/profile", profileRouter);

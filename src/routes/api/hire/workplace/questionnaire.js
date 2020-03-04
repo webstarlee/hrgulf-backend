@@ -20,11 +20,19 @@ const _listQuestionnaires = async (req, res, next) => {
         type: "=",
         value: userId,
       },
-      name: {
-        type: "LIKE",
-        value: `%${keyword}%`,
-      }
+      deletedDate: {
+        type: "=",
+        value: '',
+      },
     };
+
+    if (!!keyword) {
+      conditions["name"] = {
+        type: "LIKE",
+          value: `%${keyword}%`,
+      };
+    }
+
     const data = await helpers.listQuery({table: dbTblName.hire.questionnaire.main, conditions, page: page || 1, pageSize});
 
     res.status(200).send({
@@ -52,6 +60,10 @@ const _listQuestions = async (req, res, next) => {
       questionnaireId: {
         type: "=",
         value: questionnaireId,
+      },
+      deletedDate: {
+        type: "=",
+        value: '',
       },
     };
     const data = await helpers.listQuery({table: dbTblName.hire.questionnaire.questions, conditions, page: page || 1, pageSize});
@@ -86,7 +98,7 @@ const saveProc = async (req, res, next) => {
   const {questionnaire: {id, userId, name, description, filterByScore, minScore}, questions} = req.body;
 
   let newRows = [
-    [id, userId, name, description, filterByScore, minScore],
+    [id, userId, name, description, filterByScore, minScore, ""],
   ];
 
   try {
@@ -98,7 +110,7 @@ const saveProc = async (req, res, next) => {
     // let preIds = [];
     for (let row of questions) {
       // !!row.id && preIds.push(row.id);
-      newRows.push([row.id, questionnaireId, row.question, row.type, row.required, row.answers, row.hasCorrectAnswer, row.correctAnswer]);
+      newRows.push([row.id, questionnaireId, row.question, row.type, row.required, row.answers, row.hasCorrectAnswer, row.correctAnswer, ""]);
       row["questionnaireId"] = questionnaireId;
     }
     // sql = sprintf("DELETE FROM `%s` WHERE `questionnaireId` = ? AND `id` NOT IN ?;", dbTblName.hire.questionnaire.questions);
