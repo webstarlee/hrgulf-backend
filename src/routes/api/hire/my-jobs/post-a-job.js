@@ -12,14 +12,15 @@ import {sprintf} from "sprintf-js";
 const postJobProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {jobInformation, candidateRequirements} = req.body;
+  const {hireId, jobInformation, candidateRequirements} = req.body;
 
   try{
     let data = jobInformation || {};
     let newRows = [
-      [data.id, data.candidateType, data.title, data.jobRoleId, data.jobSubroleId, data.sectorId, data.industryId, data.countryId, data.cityId, data.employmentTypeId, data.salaryRangeId, data.vacanciesCount, data.description, data.skills, data.specialties, data.questionnaireId, ""],
+      [data.id, hireId, data.candidateType, data.title, data.jobRoleId, data.jobSubroleId, data.sectorId, data.industryId, data.countryId, data.cityId, data.employmentTypeId, data.salaryRangeId, data.vacanciesCount, data.description, data.skills, data.specialties, data.questionnaireId, data.isActive, ""],
     ];
-    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `candidateType` = VALUES(`candidateType`), `title` = VALUES(`title`), `jobRoleId` = VALUES(`jobRoleId`), `jobSubroleId` = VALUES(`jobSubroleId`), `sectorId` = VALUES(`sectorId`), `industryId` = VALUES(`industryId`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `employmentTypeId` = VALUES(`employmentTypeId`), `salaryRangeId` = VALUES(`salaryRangeId`), `vacanciesCount` = VALUES(`vacanciesCount`), `description` = VALUES(`description`), `skills` = VALUES(`skills`), `specialties` = VALUES(`specialties`), `questionnaireId` = VALUES(`questionnaireId`)", dbTblName.hire.jobs.main);
+    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `candidateType` = VALUES(`candidateType`), `title` = VALUES(`title`), `jobRoleId` = VALUES(`jobRoleId`), `jobSubroleId` = VALUES(`jobSubroleId`), `sectorId` = VALUES(`sectorId`), `industryId` = VALUES(`industryId`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `employmentTypeId` = VALUES(`employmentTypeId`), `salaryRangeId` = VALUES(`salaryRangeId`), `vacanciesCount` = VALUES(`vacanciesCount`), `description` = VALUES(`description`), `skills` = VALUES(`skills`), `specialties` = VALUES(`specialties`), `questionnaireId` = VALUES(`questionnaireId`), `isActive` = VALUES(`isActive`);", dbTblName.hire.jobs.main);
+    tracer.info(jobInformation, newRows);
 
     let rows = await db.query(sql, [newRows]);
 
@@ -27,7 +28,7 @@ const postJobProc = async (req, res, next) => {
     newRows = [
       [rows.insertId, data.careerLevel, data.xpYear1, data.xpYear2, data.majorId, data.degree, data.countryId, data.cityId, data.nationalityId, data.gender, data.age1, data.age2, ""],
     ];
-    sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `careerLevel` = VALUES(`careerLevel`), `xpYear1` = VALUES(`xpYear1`), `xpYear2` = VALUES(`xpYear2`), `majorId` = VALUES(`majorId`), `degree` = VALUES(`degree`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `nationalityId` = VALUES(`nationalityId`), `gender` = VALUES(`gender`), `age1` = VALUES(`age1`), `age2` = VALUES(`age2`)", dbTblName.hire.jobs.candidateRequirements);
+    sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `careerLevel` = VALUES(`careerLevel`), `xpYear1` = VALUES(`xpYear1`), `xpYear2` = VALUES(`xpYear2`), `majorId` = VALUES(`majorId`), `degree` = VALUES(`degree`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `nationalityId` = VALUES(`nationalityId`), `gender` = VALUES(`gender`), `age1` = VALUES(`age1`), `age2` = VALUES(`age2`);", dbTblName.hire.jobs.candidateRequirements);
     await db.query(sql, [newRows]);
 
     res.status(200).send({

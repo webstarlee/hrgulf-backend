@@ -30,8 +30,23 @@ const _makeWhereClause = conditions => {
     conditionArr.push(`\`${key}\` ${conditions[key]["type"]} ?`);
     values.push(conditions[key]["value"]);
   });
-  const whereClause = conditionArr.length ? "WHERE " + conditionArr.join(" AND ") : "";
-  return [whereClause, values];
+  const clause = conditionArr.length ? "WHERE " + conditionArr.join(" AND ") : "";
+  return [clause, values];
+};
+
+const _makeUpdateClause = updates => {
+  let conditionArr = [];
+  let values = [];
+  !!updates && Object.keys(updates).map(key => {
+    conditionArr.push(`\`${key}\` = ?`);
+    values.push(updates[key]);
+  });
+  const clause = conditionArr.length ? "SET " + conditionArr.join(", ") : "";
+  return [clause, values];
+};
+
+const _makeOnDuplicateUpdateClause = values => {
+
 };
 
 const _makeOrderClause = orders => {
@@ -92,6 +107,7 @@ export default {
     const [start, limit] = _calculateStartPosition(page, pageSize);
 
     let sql = sprintf("SELECT * FROM `%s` %s %s %s;", table, whereClause, orderClause, limitClause);
+
     try {
       let rows = await db.query(sql, values);
       sql = sprintf("SELECT COUNT(*) `count` FROM `%s` %s;", table, whereClause);
@@ -118,6 +134,22 @@ export default {
       let rows = await db.query(sql, values);
 
       return rows[0];
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  updateQuery: async ({table, updates, conditions}) => {
+    const [updateClause, values1] = _makeUpdateClause(updates);
+    const [whereClause, values2] = _makeWhereClause(conditions);
+
+    let sql = sprintf("UPDATE `%s` %s %s;", table, updateClause, whereClause);
+    // let sql = sprintf("DELETE FROM `%s` %s %s LIMIT 1;", table, whereClause, orderClause);
+    tracer.info(sql, [...values1, ...values2])
+    try {
+      let rows = await db.query(sql, [...values1, ...values2]);
+
+      return rows;
     } catch (err) {
       throw err;
     }
