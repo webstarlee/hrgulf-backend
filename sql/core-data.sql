@@ -16,6 +16,30 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`hrgulf_recruitment` /*!40100 DEFAULT CH
 
 USE `hrgulf_recruitment`;
 
+/*Table structure for table `core_career_levels` */
+
+DROP TABLE IF EXISTS `core_career_levels`;
+
+CREATE TABLE `core_career_levels` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `level` int(2) NOT NULL DEFAULT '0',
+  `careerLevel_en` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `careerLevel_ar` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_career_levels` */
+
+insert  into `core_career_levels`(`id`,`level`,`careerLevel_en`,`careerLevel_ar`,`deletedDate`) values 
+(1,1,'Student/Internship','Student/Internship',''),
+(2,2,'Fresh Graduate','Fresh Graduate',''),
+(3,3,'Entry Level','Entry Level',''),
+(4,4,'Mid Level','Mid Level',''),
+(5,5,'Management','Management',''),
+(6,6,'Director/Head','Director/Head',''),
+(7,7,'Senior Executive','Senior Executive','');
+
 /*Table structure for table `core_cities` */
 
 DROP TABLE IF EXISTS `core_cities`;
