@@ -7,17 +7,25 @@ import logger from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import Ddos from "ddos";
+const ddos = new Ddos({
+  maxcount: process.env.DDOS_MAXCOUNT,
+  burst: process.env.DDOS_BURST,
+  limit: process.env.DDOS_LIMIT,
+  trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === 'true',
+});
+
+console.log({
+  maxcount: process.env.DDOS_MAXCOUNT,
+  burst: process.env.DDOS_BURST,
+  limit: process.env.DDOS_LIMIT,
+  trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === 'true',
+});
 
 import apiRouter from "./routes/api";
 import adminApiRouter from "./routes/admin-api";
 
 const app = express();
 const cwd = process.cwd();
-const ddos = new Ddos({
-  maxcount: process.env.DDOS_MAXCOUNT,
-  burst: process.env.DDOS_BURST,
-  limit: process.env.DDOS_LIMIT,
-});
 const options = {
   uploadDir: os.tmpdir(),
   autoClean: true
@@ -44,7 +52,7 @@ app.use("/admin/assets", express.static(path.join(cwd, "public")));
 app.use("/assets", express.static(path.join(cwd, "public")));
 
 app.use("/admin/api", adminApiRouter);
-app.use("/api", apiRouter);
+app.use("/api", ddos.express, apiRouter);
 
 app.use('/admin', express.static(path.join(cwd, 'admin-frontend')));
 app.get('/admin/*', function (req, res) {

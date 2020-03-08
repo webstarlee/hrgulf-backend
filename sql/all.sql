@@ -1744,8 +1744,11 @@ CREATE TABLE `hire_job_candidate_requirements` (
 /*Data for the table `hire_job_candidate_requirements` */
 
 insert  into `hire_job_candidate_requirements`(`id`,`careerLevel`,`xpYear1`,`xpYear2`,`majorId`,`degree`,`countryId`,`cityId`,`nationalityId`,`gender`,`age1`,`age2`,`deletedDate`) values 
+(0,3,0,0,0,0,0,0,0,'U',0,0,''),
 (1,3,1,2,15,3,5,133,5,'U',0,0,''),
-(4,3,2,11,0,0,0,0,0,'U',0,0,'');
+(4,3,2,11,0,4,0,0,0,'U',0,0,''),
+(5,6,0,0,0,0,0,0,0,'U',0,0,''),
+(6,5,2,4,0,0,0,0,0,'U',0,0,'');
 
 /*Table structure for table `hire_job_email_setting` */
 
@@ -1768,10 +1771,11 @@ DROP TABLE IF EXISTS `hire_jobs`;
 
 CREATE TABLE `hire_jobs` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `hireId` int(11) NOT NULL DEFAULT '0',
   `candidateType` enum('PROFESSIONAL','SKILLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'PROFESSIONAL',
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `jobRoleId` int(11) NOT NULL DEFAULT '0',
-  `jobSubRoleId` int(11) NOT NULL DEFAULT '0',
+  `jobSubroleId` int(11) NOT NULL DEFAULT '0',
   `sectorId` int(11) NOT NULL DEFAULT '0',
   `industryId` int(11) NOT NULL DEFAULT '0',
   `countryId` int(11) NOT NULL DEFAULT '0',
@@ -1783,15 +1787,18 @@ CREATE TABLE `hire_jobs` (
   `skills` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `specialties` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `questionnaireId` int(11) NOT NULL DEFAULT '0',
+  `isActive` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-inactive, 1-active, 2-draft',
   `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `hire_jobs` */
 
-insert  into `hire_jobs`(`id`,`candidateType`,`title`,`jobRoleId`,`jobSubRoleId`,`sectorId`,`industryId`,`countryId`,`cityId`,`employmentTypeId`,`salaryRangeId`,`vacanciesCount`,`description`,`skills`,`specialties`,`questionnaireId`,`deletedDate`) values 
-(1,'SKILLED','I want to hire an artist',25,289,2,12,5,181,2,4,2,'<p>Hello</p>\n','<p>painting</p>\n','painting',3,''),
-(4,'SKILLED','asdfsadf',9,91,6,52,4,98,2,0,0,'<p>afafsd</p>\n','<p>sfdgdfsg</p>\n','asdf',0,'');
+insert  into `hire_jobs`(`id`,`hireId`,`candidateType`,`title`,`jobRoleId`,`jobSubroleId`,`sectorId`,`industryId`,`countryId`,`cityId`,`employmentTypeId`,`salaryRangeId`,`vacanciesCount`,`description`,`skills`,`specialties`,`questionnaireId`,`isActive`,`deletedDate`) values 
+(1,1,'SKILLED','I want to hire an artist',25,289,2,12,5,181,2,4,2,'<p>Hello</p>\n','<p>painting</p>\n','painting',3,0,''),
+(4,1,'SKILLED','qqq',9,91,6,54,4,89,2,0,0,'<p>afafsdqqqq</p>\n','<p>wwww</p>\n','asdf,aaa',1,0,''),
+(5,1,'SKILLED','Portfolio',11,108,2,13,5,106,0,0,0,'<p>hehehe</p>\n','<p>aaa</p>\n','hihihi',2,0,''),
+(6,1,'PROFESSIONAL','jedzidvunujo',12,120,9,78,3,55,0,0,0,'<p>safasdf</p>\n','<p>gggff</p>\n','sdfg',0,0,'');
 
 /*Table structure for table `hire_letters` */
 
@@ -1814,7 +1821,7 @@ CREATE TABLE `hire_letters` (
 /*Data for the table `hire_letters` */
 
 insert  into `hire_letters`(`id`,`userId`,`type`,`name`,`subject`,`message`,`attached`,`attachment`,`attachmentName`,`deletedDate`) values 
-(1,1,'GENERIC','asf','sdf','<p>sfffsdfaf</p>\n',0,'','',''),
+(1,1,'GENERIC','asf','sdf','<p>sfffsdfaf</p>\n',0,'','','2020-03-05'),
 (2,1,'ON_BOARDING','Research Service','taddeoprivej','<p>aaaaa</p>\n<p>dddd</p>\n',0,'','','');
 
 /*Table structure for table `hire_my_company_profiles` */
@@ -1854,7 +1861,7 @@ CREATE TABLE `hire_questionnaire` (
 
 insert  into `hire_questionnaire`(`id`,`userId`,`name`,`description`,`filterByScore`,`minScore`,`deletedDate`) values 
 (1,1,'My Questionnaire','<p style=\"text-align:right;\">This is test <span style=\"font-size: 30px;\"><strong>questionnaire</strong></span></p>\n<p>ADasdfsdf   <em>ASFDSADFASF </em></p>\n<p><span style=\"background-color: rgb(243,121,52);\"><em>ASDGASDFASDF</em></span></p>\n<p><span style=\"color: rgb(26,188,156);\"><em>ASDFASDF</em>ASDFSDFSFSDGASDFS  </span>ADFSFSF</p>\n',1,5,''),
-(2,1,'Research Service','<p>ASFD</p>\n<p style=\"text-align:right;\"><span style=\"color: rgb(26,188,156);background-color: rgb(209,72,65);font-size: 30px;font-family: Impact;\">SFDSD</span></p>\n<p></p>\n<p>??</p>\n',0,0,''),
+(2,1,'Research Service','<p>ASFD</p>\n<p style=\"text-align:right;\"><span style=\"color: rgb(26,188,156);background-color: rgb(209,72,65);font-size: 30px;font-family: Impact;\">SFDSD</span></p>\n<p></p>\n<p>??</p>\n',0,0,'2020-03-05'),
 (3,1,'New','<p><strong>This is new questionnaire</strong></p>\n<p style=\"text-align:right;\"><span style=\"color: rgb(97,189,109);\"><strong>asfsfsdf</strong></span></p>\n',1,4,'');
 
 /*Table structure for table `hire_questionnaire_answers` */
