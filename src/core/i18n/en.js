@@ -50,4 +50,6 @@ export default {
   accountIsAlreadyRegistered: "Your account is already registered. Try with another one.",
   yourAccountDoesNotSupportGoogleAuth: "Your account does not support Google Login. Try another way.",
   yourAccountDoesNotSupportFacebookAuth: "Your account does not support Facebook Login. Try another way.",
+  successfullyActivated: "Successfully Activated",
+  successfullyDeactivated: "Successfully Deactivated",
 };

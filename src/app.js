@@ -11,14 +11,7 @@ const ddos = new Ddos({
   maxcount: process.env.DDOS_MAXCOUNT,
   burst: process.env.DDOS_BURST,
   limit: process.env.DDOS_LIMIT,
-  trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === 'true',
-});
-
-console.log({
-  maxcount: process.env.DDOS_MAXCOUNT,
-  burst: process.env.DDOS_BURST,
-  limit: process.env.DDOS_LIMIT,
-  trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === 'true',
+  trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === "true",
 });
 
 import apiRouter from "./routes/api";
@@ -54,9 +47,9 @@ app.use("/assets", express.static(path.join(cwd, "public")));
 app.use("/admin/api", adminApiRouter);
 app.use("/api", ddos.express, apiRouter);
 
-app.use('/admin', express.static(path.join(cwd, 'admin-frontend')));
-app.get('/admin/*', function (req, res) {
-  res.sendFile(path.join(cwd, 'admin-frontend/index.html'));
+app.use("/admin", express.static(path.join(cwd, "admin-frontend")));
+app.get("/admin/*", function (req, res) {
+  res.sendFile(path.join(cwd, "admin-frontend/index.html"));
 });
 
 app.use(express.static(path.join(cwd, "frontend")));

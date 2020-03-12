@@ -16,7 +16,7 @@ const getJobRolesProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   try {
@@ -73,7 +73,7 @@ const getSectorsProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   try {
@@ -130,7 +130,7 @@ const getCountriesProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   try {
@@ -187,7 +187,7 @@ const getEmploymentTypesProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   try {
@@ -215,7 +215,7 @@ const getSalaryRangesProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   let orders = {
@@ -246,7 +246,7 @@ const getCareerLevelsProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   let orders = {
@@ -277,7 +277,7 @@ const getMajorsProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   let orders = {
@@ -308,7 +308,7 @@ const getDegreesProc = async (req, res, next) => {
   let conditions = {
     deletedDate: {
       type: "=",
-      value: '',
+      value: "",
     },
   };
   let orders = {

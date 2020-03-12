@@ -90,7 +90,7 @@ export default {
 
     return new Promise((resolve, reject) => {
       mkdirp.sync(fileDir, {});
-      fs.writeFile(filePath, base64Data, 'base64', function(err) {
+      fs.writeFile(filePath, base64Data, "base64", function(err) {
         if (!!err) {
           reject(err);
         } else {
@@ -113,10 +113,10 @@ export default {
       sql = sprintf("SELECT COUNT(*) `count` FROM `%s` %s;", table, whereClause);
       let count = await db.query(sql, values);
       let pageCount = 0;
-      count.length > 0 && (pageCount = Math.ceil(count[0]['count'] / limit));
+      count.length > 0 && (pageCount = Math.ceil(count[0]["count"] / limit));
 
       return {
-        count: count[0]['count'],
+        count: count[0]["count"],
         pageCount,
         data: rows,
       };
@@ -145,7 +145,6 @@ export default {
 
     let sql = sprintf("UPDATE `%s` %s %s;", table, updateClause, whereClause);
     // let sql = sprintf("DELETE FROM `%s` %s %s LIMIT 1;", table, whereClause, orderClause);
-    tracer.info(sql, [...values1, ...values2])
     try {
       let rows = await db.query(sql, [...values1, ...values2]);
 

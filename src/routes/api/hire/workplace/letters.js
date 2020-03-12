@@ -26,7 +26,7 @@ const _listItems = async (req, res, next) => {
       },
       deletedDate: {
         type: "=",
-        value: '',
+        value: "",
       },
     };
     if (!!type) {

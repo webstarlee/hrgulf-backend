@@ -67,13 +67,13 @@ const dbTblName = {
 };
 
 const smtp = {
-  // service: 'gmail',
-  host: 'smtp.office365.com',
+  // service: "gmail",
+  host: "smtp.office365.com",
   secureConnection: true,
   port: 587,
   // secure: true,
-  user: 'pm@eliteresources.co',
-  pass: 'Theelite6*',
+  user: "pm@eliteresources.co",
+  pass: "Theelite6*",
   limit: {
     receipt: 2999,
     message: 19,

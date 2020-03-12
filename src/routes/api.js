@@ -15,6 +15,7 @@ router.use("/", expressJwt({secret: session.secret})
   .unless({
     path: [
       /\/auth\/*/,
+      /\/core\/*/,
     ]
   }));
 

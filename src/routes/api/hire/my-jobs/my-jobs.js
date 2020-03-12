@@ -9,9 +9,7 @@ import helpers from "core/helpers";
 import db from "core/db";
 import {sprintf} from "sprintf-js";
 
-const _listItems = async (req, res, next) => {
-  const lang = req.get(consts.lang) || consts.defaultLanguage;
-  const langs = strings[lang];
+const _listItems = async (req) => {
   const {hireId, keyword, type, page, pageSize} = req.body;
 
   try {
@@ -22,7 +20,7 @@ const _listItems = async (req, res, next) => {
       },
       deletedDate: {
         type: "=",
-        value: '',
+        value: "",
       },
     };
     if (!!keyword) {
@@ -38,6 +36,19 @@ const _listItems = async (req, res, next) => {
       }
     }
     const data = await helpers.listQuery({table: dbTblName.hire.jobs.main, conditions, page: page || 1, pageSize});
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const _listItemsProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+
+  try {
+    const data = await _listItems(req);
 
     res.status(200).send({
       result: langs.success,
@@ -55,7 +66,7 @@ const _listItems = async (req, res, next) => {
 };
 
 const listProc = async (req, res, next) => {
-  await _listItems(req, res, next);
+  await _listItemsProc(req, res, next);
 };
 
 const getProc = async (req, res, next) => {
@@ -71,7 +82,7 @@ const getProc = async (req, res, next) => {
       },
       deletedDate: {
         type: "=",
-        value: '',
+        value: "",
       },
     };
     const jobInformation = await helpers.getQuery({table: dbTblName.hire.jobs.main, conditions});
@@ -114,7 +125,13 @@ const activateProc = async (req, res, next) => {
   try {
     await helpers.updateQuery({table: dbTblName.hire.jobs.main, updates, conditions});
 
-    await _listItems(req, res, next);
+    const data = await _listItems(req);
+
+    res.status(200).send({
+      result: langs.success,
+      message: langs[!!isActive ? "successfullyActivated" : "successfullyDeactivated"],
+      ...data,
+    });
   } catch (err) {
     tracer.error(JSON.stringify(err));
     tracer.error(__filename);
@@ -141,7 +158,7 @@ const deleteProc = async (req, res, next) => {
   try {
     await helpers.deleteQuery({table: dbTblName.hire.jobs.main, conditions});
 
-    await _listItems(req, res, next);
+    await _listItemsProc(req, res, next);
   } catch (err) {
     tracer.error(JSON.stringify(err));
     tracer.error(__filename);

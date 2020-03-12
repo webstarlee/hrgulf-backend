@@ -139,7 +139,7 @@ const changePasswordProc = async (req, res, next) => {
   const hash0 = myCrypto.hmacHex(password0 || "");
   const hash = myCrypto.hmacHex(password || "");
 
-  let sql = sprintf("SELECT * FROM `%s` WHERE `id` = ? AND `hash` = ?;", dbTblName.users);
+  let sql = sprintf("SELECT * FROM `%s` WHERE `id` = ? AND `hash` = ?;", dbTblName.core.users);
   try {
     let rows = await db.query(sql, [id, hash0]);
     if (rows.length === 0) {
@@ -149,11 +149,49 @@ const changePasswordProc = async (req, res, next) => {
       });
       return;
     }
-    sql = sprintf("UPDATE `%s` SET `hash` = ? WHERE `id` = ?;", dbTblName.users);
+    sql = sprintf("UPDATE `%s` SET `hash` = ? WHERE `id` = ?;", dbTblName.core.users);
     await db.query(sql, [hash, id]);
     res.status(200).send({
       result: langs.success,
       message: langs.passwordIsSuccessfullyChanged,
+    });
+  } catch (err) {
+    tracer.error(JSON.stringify(err));
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.unknownServerError,
+      err,
+    });
+  }
+};
+
+const savePersonalInfoProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+  let {id, firstName, fatherName, lastName, nationalityId, countryId, cityId, birthday, gender, email, phone, website, countryCode} = req.body;
+
+  try {
+    const newRow = [firstName, fatherName, lastName, nationalityId, countryId, cityId, birthday, gender, email, phone, website, countryCode];
+    let sql = sprintf("UPDATE `%s` SET `firstName` = ?, `fatherName` = ?, `lastName` = ?, `nationalityId` = ?, `countryId` = ?, `cityId` = ?, `birthday` = ?, `gender` = ?, `email` = ?, `phone` = ?, `website` = ?, `countryCode` = ? WHERE `id` = ?;", dbTblName.core.users);
+    await db.query(sql, [...newRow, id]);
+
+    const token = jwt.sign(
+      {
+        id: id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+      },
+      session.secret
+    );
+    res.status(200).send({
+      result: langs.success,
+      message: langs.successfullySaved,
+      data: {
+        user: {id, firstName, fatherName, lastName, nationalityId, countryId, cityId, birthday, gender, email, phone, website, countryCode},
+        token,
+      },
     });
   } catch (err) {
     tracer.error(JSON.stringify(err));
@@ -171,5 +209,6 @@ const router = express.Router();
 router.post("/avatar", avatarProc);
 router.post("/save-avatar", saveAvatarProc);
 router.post("/change-password", changePasswordProc);
+router.post("/save-personal-info", savePersonalInfoProc);
 
 export default router;
