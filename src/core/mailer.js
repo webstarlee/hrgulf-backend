@@ -1,8 +1,8 @@
-import nodemailer from 'nodemailer';
-import emailTemplates from 'email-templates';
-import {server, smtp} from 'core/config';
+import nodemailer from "nodemailer";
+import emailTemplates from "email-templates";
+import {server, smtp} from "core/config";
 import tracer from "core/tracer";
-import {sprintf} from 'sprintf-js';
+import {sprintf} from "sprintf-js";
 
 const email = new emailTemplates({
   message: {
@@ -19,7 +19,7 @@ const email = new emailTemplates({
 export default {
   sendForgotPasswordMail: (params) => {
     return new Promise((resolve, reject) => {
-      email.render('../email-templates/forgot-password/html.pug', params)
+      email.render("../email-templates/forgot-password/html.pug", params)
         .then(html => {
           let transporter = nodemailer.createTransport({
             // service: smtp.service,
@@ -36,7 +36,7 @@ export default {
           });
 
           const mailOptions = {
-            from: sprintf("%s <%s>", 'PM', smtp.user),
+            from: sprintf("%s <%s>", "PM", smtp.user),
             to: params.email,
             subject: params.subject,
             html,
@@ -56,7 +56,7 @@ export default {
 
   sendContactUsMail: (params) => {
     return new Promise((resolve, reject) => {
-      email.render('../email-templates/contact-us/html.pug', params)
+      email.render("../email-templates/contact-us/html.pug", params)
         .then(html => {
           let transporter = nodemailer.createTransport({
             // service: smtp.service,
@@ -73,9 +73,9 @@ export default {
           });
 
           const mailOptions = {
-            from: sprintf("%s <%s>", 'PM', smtp.user),
+            from: sprintf("%s <%s>", "PM", smtp.user),
             to: smtp.user,
-            subject: 'اتصل بن(Contact Us)',
+            subject: "اتصل بن(Contact Us)",
             html,
           };
 
@@ -92,7 +92,7 @@ export default {
   },
   sendCourseJoinMail: async (to, name, subject) => {
     return new Promise((resolve, reject) => {
-      email.render('../email-templates/course-join/html.pug', {})
+      email.render("../email-templates/course-join/html.pug", {})
         .then((html) => {
           let transporter = nodemailer.createTransport({
             // service: smtp.service,
@@ -129,7 +129,7 @@ export default {
 
   sendMassMail: async (to, name, subject, message) => {
     return new Promise((resolve, reject) => {
-      // email.render('../email_templates/email_verify/html.pug', {
+      // email.render("../email_templates/email_verify/html.pug", {
       //   name: name,
       //   subject,
       //   message,
@@ -156,7 +156,7 @@ export default {
         text: message,
       };
 
-      // tracer.info('mailOptions', mailOptions);
+      // tracer.info("mailOptions", mailOptions);
 
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {

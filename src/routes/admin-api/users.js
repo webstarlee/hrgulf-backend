@@ -40,10 +40,10 @@ const _loadData = async (req, res, next) => {
 
     let count = await db.query(sql, ["", search, search, search, search, search, search, search, search, search]);
     let pageCount = 0;
-    count.length > 0 && (pageCount = Math.ceil(count[0]['count'] / pageSize));
+    count.length > 0 && (pageCount = Math.ceil(count[0]["count"] / pageSize));
     res.status(200).send({
       result: langs.success,
-      count: count[0]['count'],
+      count: count[0]["count"],
       pageCount,
       data: rows,
     });

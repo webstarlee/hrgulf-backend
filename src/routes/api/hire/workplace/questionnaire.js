@@ -22,7 +22,7 @@ const _listQuestionnaires = async (req, res, next) => {
       },
       deletedDate: {
         type: "=",
-        value: '',
+        value: "",
       },
     };
 
@@ -63,7 +63,7 @@ const _listQuestions = async (req, res, next) => {
       },
       deletedDate: {
         type: "=",
-        value: '',
+        value: "",
       },
     };
     const data = await helpers.listQuery({table: dbTblName.hire.questionnaire.questions, conditions, page: page || 1, pageSize});
