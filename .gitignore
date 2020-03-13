@@ -105,3 +105,4 @@ dist
 .idea/
 .env*
 public/uploads/
+backend/server.development.js
