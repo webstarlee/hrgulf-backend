@@ -406,6 +406,27 @@ insert  into `core_employment_types`(`id`,`employmentType_en`,`employmentType_ar
 (7,'Temporary Employee','Temporary Employee',''),
 (8,'Volunteer','Volunteer','');
 
+/*Table structure for table `core_grades` */
+
+DROP TABLE IF EXISTS `core_grades`;
+
+CREATE TABLE `core_grades` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `grade_en` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `grade_ar` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deleted_date` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_grades` */
+
+insert  into `core_grades`(`id`,`grade_en`,`grade_ar`,`deleted_date`) values 
+(1,'4-point GPA','4-point GPA',''),
+(2,'5-point GPA','5-point GPA',''),
+(3,'20-point GPA','20-point GPA',''),
+(4,'Percentage (out of 100)','Percentage (out of 100)',''),
+(5,'Rating','Rating','');
+
 /*Table structure for table `core_industries` */
 
 DROP TABLE IF EXISTS `core_industries`;
@@ -1618,6 +1639,29 @@ insert  into `core_sectors`(`id`,`sector_en`,`sector_ar`,`deletedDate`) values
 (17,'Retail & Wholesale','Retail & Wholesale',''),
 (18,'Security','Security',''),
 (19,'Transport, Logistics, & Aviation','Transport, Logistics, & Aviation','');
+
+/*Table structure for table `core_visa_statuses` */
+
+DROP TABLE IF EXISTS `core_visa_statuses`;
+
+CREATE TABLE `core_visa_statuses` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `visaStatus_en` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `visaStatus_ar` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_visa_statuses` */
+
+insert  into `core_visa_statuses`(`id`,`visaStatus_en`,`visaStatus_ar`,`deletedDate`) values 
+(1,'Citizen','Citizen',''),
+(2,'Residency Visa(Transferable)','Residency Visa(Transferable)',''),
+(3,'Residency Visa(Non-Transferable)','Residency Visa(Non-Transferable)',''),
+(4,'Student Visa','Student Visa',''),
+(5,'Transit Visa','Transit Visa',''),
+(6,'Visit Visa','Visit Visa',''),
+(7,'No Visa','No Visa','');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

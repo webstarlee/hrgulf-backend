@@ -332,6 +332,62 @@ const getDegreesProc = async (req, res, next) => {
   }
 };
 
+const getVisaStatusesProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+
+  let conditions = {
+    deletedDate: {
+      type: "=",
+      value: "",
+    },
+  };
+  try {
+    const data = await helpers.listQuery({table: dbTblName.core.visaStatuses, pageSize: 500});
+
+    res.status(200).send({
+      result: langs.success,
+      ...data,
+    });
+  } catch (err) {
+    tracer.error(JSON.stringify(err));
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.unknownServerError,
+      err,
+    });
+  }
+};
+
+const getGradesProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+
+  let conditions = {
+    deletedDate: {
+      type: "=",
+      value: "",
+    },
+  };
+  try {
+    const data = await helpers.listQuery({table: dbTblName.core.grades, pageSize: 500});
+
+    res.status(200).send({
+      result: langs.success,
+      ...data,
+    });
+  } catch (err) {
+    tracer.error(JSON.stringify(err));
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.unknownServerError,
+      err,
+    });
+  }
+};
+
 const router = express.Router();
 
 router.post("/get-job-roles", getJobRolesProc);
@@ -345,5 +401,7 @@ router.post("/get-salary-ranges", getSalaryRangesProc);
 router.post("/get-career-levels", getCareerLevelsProc);
 router.post("/get-majors", getMajorsProc);
 router.post("/get-degrees", getDegreesProc);
+router.post("/get-grades", getGradesProc);
+router.post("/get-visa-statuses", getVisaStatusesProc);
 
 export default router;

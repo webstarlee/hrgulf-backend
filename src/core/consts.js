@@ -6,6 +6,9 @@ export const uploadPath = {
       myCompanyProfiles: "uploads/hire/workplace/my-company-profiles",
     },
   },
+  work: {
+    cvs: "uploads/work/cvs",
+  },
   aboutUs: "uploads/about-us",
 };
 export const success = "success";

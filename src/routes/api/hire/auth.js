@@ -37,7 +37,7 @@ const signUpProc = async (req, res, next) => {
     rows = await db.query(sql, [newRows]);
 
     newRows = [
-      [null, 0, "", rows.insertId, "ADMIN", email, email, hash, firstName, fatherName, lastName, countryCode, phone, "", location, location, 0, "", "U", date, date, "", 0, 0, date],
+      [null, 0, "", rows.insertId, "ADMIN", email, "", hash, firstName, fatherName, lastName, countryCode, phone, "", location, location, 0, "", "U", date, date, "", 0, 0, ""],
     ];
     sql = sprintf("INSERT INTO `%s` VALUES ?;", dbTblName.core.users);
     await db.query(sql, [newRows]);
