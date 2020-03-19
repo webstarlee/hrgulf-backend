@@ -49,10 +49,10 @@ const saveProc = async (req, res, next) => {
 const saveMinifiedProfile = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {userId, birthday, nationalityId, countryId, cityId, countryCode, phone} = req.body;
+  const {id, userId, birthday, nationalityId, countryId, cityId, countryCode, phone} = req.body;
 
-  const newRow = [birthday, nationalityId, countryId, cityId, countryCode, phone];
-  let sql = sprintf("UPDATE `%s` SET `birthday` = ?, `nationalityId` = ?, `countryId` = ?, `cityId` = ?, `countryCode` = ?, `phone` = ? WHERE `id` = ?;", dbTblName.core.users);
+  const newRow = [id, birthday, nationalityId, countryId, cityId, countryCode, phone];
+  let sql = sprintf("UPDATE `%s` SET `workId` = ?, `birthday` = ?, `nationalityId` = ?, `countryId` = ?, `cityId` = ?, `countryCode` = ?, `phone` = ? WHERE `id` = ?;", dbTblName.core.users);
   try {
     let rows = await db.query(sql, [...newRow, userId]);
     const {work} = await _save(req, res, next);
