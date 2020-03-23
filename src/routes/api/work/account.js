@@ -11,11 +11,14 @@ const _save = async (req, res, next) => {
   const langs = strings[lang];
   const {id, jobRoleId, jobTitle, companyName, startDate, endDate, isPresent, jobLocationId, companySectorId, companyIndustryId, jobVisaStatusId, careerLevel, degree, university, majorId, graduatedDate, gradeId} = req.body;
 
-  const newRow = [jobRoleId, jobTitle, companyName, startDate, endDate, isPresent, jobLocationId, companySectorId, companyIndustryId, jobVisaStatusId, careerLevel, degree, university, majorId, graduatedDate, gradeId];
-  let sql = sprintf("UPDATE `%s` SET `jobRoleId` = ?, `jobTitle` = ?, `companyName` = ?, `startDate` = ?, `endDate` = ?, `isPresent` = ?, `jobLocationId` = ?, `companySectorId` = ?, `companyIndustryId` = ?, `jobVisaStatusId` = ?, `careerLevel` = ?, `degree` = ?, `university` = ?, `majorId` = ?, `graduatedDate` = ?, `gradeId` = ?, `isVisited` = ? WHERE `id` = ?;", dbTblName.work.accounts);
+  const newRows = [
+    [!id ? null : id, jobRoleId, jobTitle, companyName, startDate, endDate, isPresent, jobLocationId, companySectorId, companyIndustryId, jobVisaStatusId, careerLevel, degree, university, majorId, graduatedDate, gradeId, 0, "", 1, ""]
+  ];
+  let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `jobRoleId` = VALUES(`jobRoleId`), `jobTitle` = VALUES(`jobTitle`), `companyName` = VALUES(`companyName`), `startDate` = VALUES(`startDate`), `endDate` = VALUES(`endDate`), `isPresent` = VALUES(`isPresent`), `jobLocationId` = VALUES(`jobLocationId`), `companySectorId` = VALUES(`companySectorId`), `companyIndustryId` = VALUES(`companyIndustryId`), `jobVisaStatusId` = VALUES(`jobVisaStatusId`), `careerLevel` = VALUES(`careerLevel`), `degree` = VALUES(`degree`), `university` = VALUES(`university`), `majorId` = VALUES(`majorId`), `graduatedDate` = VALUES(`graduatedDate`), `gradeId` = VALUES(`gradeId`), `isVisited` = VALUES(`isVisited`);", dbTblName.work.accounts);
   try {
-    let rows = await db.query(sql, [...newRow, 1, id]);
+    let rows = await db.query(sql, [newRows]);
     return {
+      rows,
       work: {id, jobRoleId, jobTitle, companyName, startDate, endDate, isPresent, jobLocationId, companySectorId, companyIndustryId, jobVisaStatusId, careerLevel, degree, university, majorId, graduatedDate, gradeId, isVisited: 1},
     };
   } catch (err) {
@@ -27,12 +30,12 @@ const saveProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
   try {
-    const {hire} = await _save(req, res, next);
+    const {work} = await _save(req, res, next);
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySaved,
       data:  {
-        hire,
+        work,
       },
     });
   } catch (err) {
@@ -51,11 +54,13 @@ const saveMinifiedProfile = async (req, res, next) => {
   const langs = strings[lang];
   const {id, userId, birthday, nationalityId, countryId, cityId, countryCode, phone} = req.body;
 
-  const newRow = [id, birthday, nationalityId, countryId, cityId, countryCode, phone];
-  let sql = sprintf("UPDATE `%s` SET `workId` = ?, `birthday` = ?, `nationalityId` = ?, `countryId` = ?, `cityId` = ?, `countryCode` = ?, `phone` = ? WHERE `id` = ?;", dbTblName.core.users);
   try {
-    let rows = await db.query(sql, [...newRow, userId]);
-    const {work} = await _save(req, res, next);
+    const {rows, work} = await _save(req, res, next);
+
+    const newRow = [!id ? rows.insertId : id, birthday, nationalityId, countryId, cityId, countryCode, phone];
+    let sql = sprintf("UPDATE `%s` SET `workId` = ?, `birthday` = ?, `nationalityId` = ?, `countryId` = ?, `cityId` = ?, `countryCode` = ?, `phone` = ? WHERE `id` = ?;", dbTblName.core.users);
+    await db.query(sql, [...newRow, userId]);
+
     res.status(200).send({
       result: langs.success,
       message: langs.successfullySaved,
