@@ -101,11 +101,13 @@ const getIndustriesProc = async (req, res, next) => {
 
   try {
     let conditions = {
-      sectorId: {
-        type: "=",
-        value: sectorId,
-      },
     };
+    if (!!sectorId) {
+      conditions["sectorId"] = {
+        type: "=",
+          value: sectorId,
+      };
+    }
     const data = await helpers.listQuery({table: dbTblName.core.industries, conditions, pageSize: 500});
 
     res.status(200).send({
@@ -158,11 +160,14 @@ const getCitiesProc = async (req, res, next) => {
 
   try {
     let conditions = {
-      countryId: {
-        type: "=",
-        value: countryId,
-      },
+
     };
+    if (!!countryId) {
+      conditions["countryId"] = {
+        type: "=",
+          value: countryId,
+      };
+    }
     const data = await helpers.listQuery({table: dbTblName.core.cities, conditions, pageSize: 500});
 
     res.status(200).send({
