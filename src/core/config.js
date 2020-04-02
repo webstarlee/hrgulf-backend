@@ -46,6 +46,7 @@ const dbTblName = {
     degrees: "core_degrees",
     grades: "core_grades",
     visaStatuses: "core_visa_statuses",
+    specialties: "core_specialties",
   },
   hire: {
     accounts: "hire_accounts",

@@ -1,5 +1,6 @@
 import express from "express";
 
+import findJobsRouter from "./find-jobs/find-jobs";
 import jobsByRoleRouter from "./find-jobs/jobs-by-role";
 import jobsByLocationRouter from "./find-jobs/jobs-by-location";
 import jobsBySectorRouter from "./find-jobs/jobs-by-sector";
@@ -7,6 +8,7 @@ import jobsByCompaniesRouter from "./find-jobs/jobs-by-companies";
 
 const router = express.Router();
 
+router.use("/find-jobs", findJobsRouter);
 router.use("/jobs-by-role", jobsByRoleRouter);
 router.use("/jobs-by-location", jobsByLocationRouter);
 router.use("/jobs-by-sector", jobsBySectorRouter);
