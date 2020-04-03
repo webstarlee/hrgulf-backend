@@ -27,7 +27,7 @@ const _makeWhereClause = ({countries, cities, jobRoles, specialties, industries,
     whereArr.push(sprintf("(%s)", subWhereArr.join(" OR ")));
   }
   if (!!industries && !!industries.length) {
-    whereArr.push(sprintf("J.industryId IN (%s)", industries));
+    whereArr.push(sprintf("J.sectorId IN (%s)", industries));
   }
   if (!!careerLevels && !!careerLevels.length) {
     whereArr.push(sprintf("R.careerLevel IN (%s)", careerLevels));
@@ -42,7 +42,7 @@ const _makeWhereClause = ({countries, cities, jobRoles, specialties, industries,
     whereArr.push(sprintf("FIND_IN_SET(A.type, '%s')", companyTypes));
   }
   if (!!companyNames && !!companyNames.length) {
-    whereArr.push(sprintf("FIND_IN_SET(A.name, '%s')", companyNames));
+    whereArr.push(sprintf("FIND_IN_SET(A.name, '%s')", companyNames ));
   }
   // if (!!dateModified && !!dateModified.length) {
   //   whereArr.push(sprintf("J.jobRoleId IN (%s)", dateModified));
@@ -56,34 +56,26 @@ const _makeWhereClause = ({countries, cities, jobRoles, specialties, industries,
 const _listItems = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {userId, type, keyword, page, pageSize} = req.body;
+  const {countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified, page, pageSize} = req.body;
 
   try {
-    let conditions = {
-      userId: {
-        type: "=",
-        value: userId,
-      },
-      name: {
-        type: "LIKE",
-        value: `%${keyword}%`,
-      },
-      deletedDate: {
-        type: "=",
-        value: "",
-      },
-    };
-    if (!!type) {
-      conditions["type"] = {
-        type: "=",
-        value: type,
-      }
-    }
-    const data = await helpers.listQuery({table: dbTblName.hire.letters, conditions, page: page || 1, pageSize});
+    const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
+    const limit = pageSize || consts.defaultPageSize;
+    const start = ((page || 1) - 1) * limit;
+    let sql = sprintf("SELECT J.*, R.*, A.name companyName, A.type companyType, L1.country_en, L1.country_ar, L2.city_en, L2.city_ar, CL.careerLevel_en, CL.careerLevel_ar FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId LEFT JOIN %s L1 ON L1.id = J.countryId LEFT JOIN %s L2 ON L2.id = J.cityId LEFT JOIN core_career_levels CL ON CL.level = R.careerLevel %s ORDER BY J.updatedDate DESC LIMIT ?, ?;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, dbTblName.core.countries, dbTblName.core.cities, whereClause);
+    tracer.info(sql, start, limit);
+    const rows = await db.query(sql, [start, limit]);
+
+    sql = sprintf("SELECT COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
+    const count = await db.query(sql);
+    let pageCount = 0;
+    count.length > 0 && (pageCount = Math.ceil(count[0]["count"] / limit));
 
     res.status(200).send({
       result: langs.success,
-      ...data,
+      data: rows,
+      count: count[0]["count"],
+      pageCount,
     });
   } catch (err) {
     tracer.error(JSON.stringify(err));
@@ -104,7 +96,6 @@ const _listCountries = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.countryId, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.countryId) J ON J.countryId = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.countries, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -130,7 +121,6 @@ const _listCities = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.cityId, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.cityId) J ON J.cityId = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.cities, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -156,7 +146,6 @@ const _listJobRoles = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.jobRoleId, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.jobRoleId) J ON J.jobRoleId = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.jobRoles, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -182,7 +171,6 @@ const _listSpecialties = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.specialties, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.specialties) J ON J.specialties = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.specialties, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -208,7 +196,6 @@ const _listIndustries = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.sectorId, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.sectorId) J ON J.sectorId = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.sectors, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -234,7 +221,6 @@ const _listCareerLevels = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, employmentTypes, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT R.careerLevel, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY R.careerLevel) J ON J.careerLevel = M.level AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.careerLevels, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -260,7 +246,6 @@ const _listEmploymentTypes = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, genders, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT M.*, J.count FROM %s M JOIN (SELECT J.employmentTypeId, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY J.employmentTypeId) J ON J.employmentTypeId = M.id AND J.count > 0 ORDER BY J.count DESC;", dbTblName.core.employmentTypes, dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -286,7 +271,6 @@ const _listGenders = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, companyTypes, companyNames, dateModified});
     let sql = sprintf("SELECT * FROM (SELECT R.gender, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY R.gender) J WHERE J.gender != 'U' AND J.count > 0 ORDER BY J.count DESC;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -312,7 +296,6 @@ const _listCompanyTypes = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyNames, dateModified});
     let sql = sprintf("SELECT * FROM (SELECT A.type `companyType`, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY A.type) J WHERE J.count > 0 ORDER BY J.count DESC;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({
@@ -338,7 +321,6 @@ const _listCompanyNames = async (req, res, next) => {
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, dateModified});
     let sql = sprintf("SELECT * FROM (SELECT A.name `companyName`, COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s GROUP BY A.name) J WHERE J.count > 0 ORDER BY J.count DESC;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
-    tracer.info(sql);
     const rows = await db.query(sql);
 
     res.status(200).send({

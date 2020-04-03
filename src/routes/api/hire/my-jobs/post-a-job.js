@@ -14,13 +14,14 @@ const postJobProc = async (req, res, next) => {
   const langs = strings[lang];
   const {hireId, jobInformation, candidateRequirements} = req.body;
 
+  const today = new Date();
+
   try{
     let data = jobInformation || {};
     let newRows = [
-      [data.id, hireId, data.candidateType, data.title, data.jobRoleId, data.jobSubroleId, data.sectorId, data.industryId, data.countryId, data.cityId, data.employmentTypeId, data.salaryRangeId, data.vacanciesCount, data.description, data.skills, data.specialties, data.questionnaireId, data.isActive, ""],
+      [data.id, hireId, data.candidateType, data.title, data.jobRoleId, data.jobSubroleId, data.sectorId, data.industryId, data.countryId, data.cityId, data.employmentTypeId, data.salaryRangeId, data.vacanciesCount, data.description, data.skills, data.specialties, data.questionnaireId, data.isActive, today, today, ""],
     ];
-    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `candidateType` = VALUES(`candidateType`), `title` = VALUES(`title`), `jobRoleId` = VALUES(`jobRoleId`), `jobSubroleId` = VALUES(`jobSubroleId`), `sectorId` = VALUES(`sectorId`), `industryId` = VALUES(`industryId`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `employmentTypeId` = VALUES(`employmentTypeId`), `salaryRangeId` = VALUES(`salaryRangeId`), `vacanciesCount` = VALUES(`vacanciesCount`), `description` = VALUES(`description`), `skills` = VALUES(`skills`), `specialties` = VALUES(`specialties`), `questionnaireId` = VALUES(`questionnaireId`), `isActive` = VALUES(`isActive`);", dbTblName.hire.jobs.main);
-    tracer.info(jobInformation, newRows);
+    let sql = sprintf("INSERT INTO `%s` VALUES ? ON DUPLICATE KEY UPDATE `candidateType` = VALUES(`candidateType`), `title` = VALUES(`title`), `jobRoleId` = VALUES(`jobRoleId`), `jobSubroleId` = VALUES(`jobSubroleId`), `sectorId` = VALUES(`sectorId`), `industryId` = VALUES(`industryId`), `countryId` = VALUES(`countryId`), `cityId` = VALUES(`cityId`), `employmentTypeId` = VALUES(`employmentTypeId`), `salaryRangeId` = VALUES(`salaryRangeId`), `vacanciesCount` = VALUES(`vacanciesCount`), `description` = VALUES(`description`), `skills` = VALUES(`skills`), `specialties` = VALUES(`specialties`), `questionnaireId` = VALUES(`questionnaireId`), `isActive` = VALUES(`isActive`), `updatedDate` = VALUES(`updatedDate`);", dbTblName.hire.jobs.main);
 
     let rows = await db.query(sql, [newRows]);
 
