@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const server = {
-  isDev: false,
+  isDev: process.env.NODE_ENV !== "production",
   port: process.env.HTTP_PORT,
   sslPort: process.env.HTTPS_PORT,
   baseUrl: process.env.BASE_URL,

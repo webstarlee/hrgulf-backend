@@ -19,10 +19,10 @@ module.exports = (env, argv) => {
     output: {
       path: path.join(__dirname, "backend"),
       publicPath: "/",
-      filename: '[name].' + argv.mode + '.js',
+      filename: "[name]." + argv.mode + ".js",
     },
     mode: argv.mode,
-    target: 'node',
+    target: "node",
     node: {
       // Need this when working with express, otherwise the build fails
       __dirname: false,   // if you don't put this is, __dirname
@@ -46,7 +46,7 @@ module.exports = (env, argv) => {
         }
       ]
     },
-    plugins: argv.mode === 'production' ? [
+    plugins: argv.mode === "production" ? [
       new JavaScriptObfuscator ({
         compact: true,
         controlFlowFlattening: true,
@@ -54,7 +54,7 @@ module.exports = (env, argv) => {
         renameGlobals: true,
         rotateUnicodeArray: true,
         stringArray: true,
-        stringArrayEncoding: 'rc4',
+        stringArrayEncoding: "rc4",
       }, []) ,
     ] : [],
   });

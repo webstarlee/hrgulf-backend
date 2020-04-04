@@ -6,6 +6,7 @@ import consts from "core/consts";
 import helpers from "core/helpers";
 import db from "core/db";
 import {sprintf} from "sprintf-js";
+import moment from "moment";
 
 const _makeWhereClause = ({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified}) => {
   const whereArr = [];
@@ -65,6 +66,16 @@ const _listItems = async (req, res, next) => {
     let sql = sprintf("SELECT J.*, R.*, A.name companyName, A.type companyType, L1.country_en, L1.country_ar, L2.city_en, L2.city_ar, CL.careerLevel_en, CL.careerLevel_ar FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId LEFT JOIN %s L1 ON L1.id = J.countryId LEFT JOIN %s L2 ON L2.id = J.cityId LEFT JOIN core_career_levels CL ON CL.level = R.careerLevel %s ORDER BY J.updatedDate DESC LIMIT ?, ?;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, dbTblName.core.countries, dbTblName.core.cities, whereClause);
     tracer.info(sql, start, limit);
     const rows = await db.query(sql, [start, limit]);
+    let diff;
+    let nowEn;
+    let nowAr;
+    for (let row of rows) {
+      nowEn = moment(row["createdDate"]);
+      nowAr = moment(row["createdDate"]).locale("ar");
+      diff = moment().diff(row["createdDate"], "day", true);
+      row["createdDate_en"] = diff < 7 ? nowEn.fromNow() : nowEn.format("DD/MM/YYYY");
+      row["createdDate_ar"] = diff < 7 ? nowAr.fromNow() : nowAr.format("DD/MM/YYYY");
+    }
 
     sql = sprintf("SELECT COUNT(*) `count` FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId %s;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, whereClause);
     const count = await db.query(sql);
