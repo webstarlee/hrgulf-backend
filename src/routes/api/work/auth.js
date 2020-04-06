@@ -60,13 +60,7 @@ const signUpProc = async (req, res, next) => {
       message: langs.successfullyRegistered,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

@@ -39,13 +39,7 @@ const loadSalaryProc = async (req, res, next) => {
       });
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -66,13 +60,7 @@ const saveSalaryProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -104,13 +92,7 @@ const loadAboutProc = async (req, res, next) => {
       });
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -131,13 +113,7 @@ const saveAboutProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -169,13 +145,7 @@ const loadVisionProc = async (req, res, next) => {
       });
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -196,13 +166,7 @@ const saveVisionProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -234,13 +198,7 @@ const loadMissionProc = async (req, res, next) => {
       });
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -261,13 +219,7 @@ const saveMissionProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -297,13 +249,7 @@ const loadCoverPhotoProc = async (req, res, next) => {
       });
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -347,13 +293,7 @@ const saveCoverPhotoProc = async (req, res, next) => {
       data: {rows, coverPhoto},
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

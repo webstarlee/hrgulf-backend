@@ -6,6 +6,7 @@ import db from "core/db";
 import strings from "core/strings";
 import tracer from "core/tracer";
 import consts from "core/consts";
+import helpers from "core/helpers";
 
 const _loadData = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -48,13 +49,7 @@ const _loadData = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -76,13 +71,7 @@ const allowProc = async (req, res, next) => {
 
     _loadData(req, res, next);
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -100,13 +89,7 @@ const deleteProc = async (req, res, next) => {
 
     _loadData(req, res, next);
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -127,13 +110,7 @@ const saveProc = async (req, res, next) => {
       message: langs.successfullySaved,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -160,13 +137,7 @@ const getProc = async (req, res, next) => {
       data: row,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -195,13 +166,7 @@ const countProc = async (req, res, next) => {
       }
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -229,13 +194,7 @@ const signInHistoryProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -253,13 +212,7 @@ const countPerGenderProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

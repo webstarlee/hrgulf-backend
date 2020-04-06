@@ -10,6 +10,7 @@ import db from "core/db";
 import strings from "core/strings";
 import tracer from "core/tracer";
 import consts from "core/consts";
+import helpers from "core/helpers";
 
 const loadAboutUs = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -32,13 +33,7 @@ const loadAboutUs = async (req, res, next) => {
       data,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

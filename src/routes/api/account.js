@@ -121,13 +121,7 @@ const saveAvatarProc = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -156,13 +150,7 @@ const changePasswordProc = async (req, res, next) => {
       message: langs.passwordIsSuccessfullyChanged,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -194,13 +182,7 @@ const savePersonalInfoProc = async (req, res, next) => {
       },
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

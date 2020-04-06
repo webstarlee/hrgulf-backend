@@ -11,6 +11,7 @@ import tracer from "core/tracer";
 import consts, {accountTypes, auth, resetPasswordUri, social, tokenStatus} from "core/consts";
 import mailer from "core/mailer";
 import fetch, {GET} from "core/fetch";
+import helpers from "core/helpers";
 
 const _validateToken = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -198,13 +199,7 @@ const signInProc = async (req, res, next) => {
       },
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -250,13 +245,7 @@ const sendForgotPasswordMailProc = async (req, res, next) => {
       message: langs.resetEmailIsSent,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -292,13 +281,7 @@ const validateTokenProc = async (req, res, next) => {
         break;
     }
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -341,13 +324,7 @@ const resetPasswordProc = async (req, res, next) => {
       message: langs.successfullyChanged,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

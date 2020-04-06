@@ -1,0 +1,4 @@
+{
+  "watch": ["backend/server.development.js"]
+}
+

@@ -9,6 +9,7 @@ import myCrypto from "core/myCrypto";
 import strings from "core/strings";
 import tracer from "core/tracer";
 import consts, {accountTypes} from "core/consts";
+import helpers from "core/helpers";
 
 const signUpProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -49,13 +50,7 @@ const signUpProc = async (req, res, next) => {
       message: langs.successfullyRegistered,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

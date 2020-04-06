@@ -57,15 +57,15 @@ const _makeWhereClause = ({countries, cities, jobRoles, specialties, industries,
 const _listItems = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
   const langs = strings[lang];
-  const {countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified, page, pageSize} = req.body;
+  const {workId, countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified, page, pageSize} = req.body;
 
   try {
     const whereClause = _makeWhereClause({countries, cities, jobRoles, specialties, industries, careerLevels, employmentTypes, genders, companyTypes, companyNames, dateModified});
     const limit = pageSize || consts.defaultPageSize;
     const start = ((page || 1) - 1) * limit;
-    let sql = sprintf("SELECT J.*, R.*, A.name companyName, A.type companyType, L1.country_en, L1.country_ar, L2.city_en, L2.city_ar, CL.careerLevel_en, CL.careerLevel_ar FROM %s J JOIN %s R ON R.id = J.id JOIN %s A ON A.id = J.hireId LEFT JOIN %s L1 ON L1.id = J.countryId LEFT JOIN %s L2 ON L2.id = J.cityId LEFT JOIN core_career_levels CL ON CL.level = R.careerLevel %s ORDER BY J.updatedDate DESC LIMIT ?, ?;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.hire.accounts, dbTblName.core.countries, dbTblName.core.cities, whereClause);
+    let sql = sprintf("SELECT J.*, R.*, JL1.jobRole_en, JL1.jobRole_ar, JL2.jobSubrole_en, JL2.jobSubrole_ar, ET.employmentType_en, ET.employmentType_ar, SL.minSalary, SL.maxSalary, A.name companyName, A.type companyType, L1.country_en, L1.country_ar, L2.city_en, L2.city_ar, CL.careerLevel_en, CL.careerLevel_ar, S.sector_en `companySector_en`, S.sector_ar `companySector_ar`, I.industry_en `companyIndustry_en`, I.industry_ar `companyIndustry_ar`, WC.status `candidateStatus` FROM %s J JOIN %s R ON R.id = J.id JOIN %s JL1 ON JL1.id = J.jobRoleId JOIN %s JL2 ON JL2.id = J.jobSubroleId JOIN %s A ON A.id = J.hireId LEFT JOIN %s ET ON ET.id = J.employmentTypeId LEFT JOIN %s SL ON SL.id = J.salaryRangeId LEFT JOIN %s L1 ON L1.id = J.countryId LEFT JOIN %s L2 ON L2.id = J.cityId LEFT JOIN %s CL ON CL.level = R.careerLevel LEFT JOIN %s S ON S.id = A.sectorId LEFT JOIN %s I ON I.id = A.industryId LEFT JOIN %s WC ON WC.workId = ? %s ORDER BY J.updatedDate DESC LIMIT ?, ?;", dbTblName.hire.jobs.main, dbTblName.hire.jobs.candidateRequirements, dbTblName.core.jobRoles, dbTblName.core.jobSubroles, dbTblName.hire.accounts, dbTblName.core.employmentTypes, dbTblName.core.salaryRanges, dbTblName.core.countries, dbTblName.core.cities, dbTblName.core.careerLevels, dbTblName.core.sectors, dbTblName.core.industries, dbTblName.work.jobs.candidates, whereClause);
     tracer.info(sql, start, limit);
-    const rows = await db.query(sql, [start, limit]);
+    const rows = await db.query(sql, [workId, start, limit]);
     let diff;
     let nowEn;
     let nowAr;
@@ -89,13 +89,7 @@ const _listItems = async (req, res, next) => {
       pageCount,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -114,13 +108,7 @@ const _listCountries = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -139,13 +127,7 @@ const _listCities = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -164,13 +146,7 @@ const _listJobRoles = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -189,13 +165,7 @@ const _listSpecialties = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -214,13 +184,7 @@ const _listIndustries = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -239,13 +203,7 @@ const _listCareerLevels = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -264,13 +222,7 @@ const _listEmploymentTypes = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -289,13 +241,7 @@ const _listGenders = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -314,13 +260,7 @@ const _listCompanyTypes = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -339,13 +279,7 @@ const _listCompanyNames = async (req, res, next) => {
       data: rows,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -393,6 +327,18 @@ const listCompanyNamesProc = async (req, res, next) => {
   await _listCompanyNames(req, res, next);
 };
 
+const applyProc = async (req, res, next) => {
+  const lang = req.get(consts.lang) || consts.defaultLanguage;
+  const langs = strings[lang];
+  const {workId, jobId} = req.body;
+
+  try {
+
+  } catch (err) {
+    helpers.handleErr(res, langs, err);
+  }
+};
+
 const router = express.Router();
 
 router.post("/list", listProc);
@@ -406,6 +352,7 @@ router.post("/list-employment-types", listEmploymentTypesProc);
 router.post("/list-genders", listGendersProc);
 router.post("/list-company-types", listCompanyTypesProc);
 router.post("/list-company-names", listCompanyNamesProc);
+router.post("/apply", applyProc);
 // router.post("/upload-attachment", deleteProc);
 
 export default router;

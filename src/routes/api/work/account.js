@@ -5,6 +5,7 @@ import tracer from "core/tracer";
 import consts from "core/consts";
 import db from "core/db";
 import {sprintf} from "sprintf-js";
+import helpers from "core/helpers";
 
 const _save = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -39,13 +40,7 @@ const saveProc = async (req, res, next) => {
       },
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -70,13 +65,7 @@ const saveMinifiedProfile = async (req, res, next) => {
       },
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

@@ -64,6 +64,9 @@ const dbTblName = {
   },
   work: {
     accounts: "work_accounts",
+    jobs: {
+      candidates: "work_job_candidates",
+    },
   },
 
   resetPasswordTokens: "reset_password_tokens",

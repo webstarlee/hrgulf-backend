@@ -7,6 +7,7 @@ import strings from "core/strings";
 import tracer from "core/tracer";
 import consts from "core/consts";
 import myCrypto from "core/myCrypto";
+import helpers from "core/helpers";
 
 const saveProc = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -37,13 +38,7 @@ const saveProc = async (req, res, next) => {
       },
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -72,13 +67,7 @@ const changePasswordProc = async (req, res, next) => {
       message: langs.successfullyChanged,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 

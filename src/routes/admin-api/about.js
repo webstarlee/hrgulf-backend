@@ -10,6 +10,7 @@ import db from "core/db";
 import strings from "core/strings";
 import tracer from "core/tracer";
 import consts from "core/consts";
+import helpers from "core/helpers";
 
 const loadAboutUs = async (req, res, next) => {
   const lang = req.get(consts.lang) || consts.defaultLanguage;
@@ -32,13 +33,7 @@ const loadAboutUs = async (req, res, next) => {
       data,
     });
   } catch (err) {
-    tracer.error(JSON.stringify(err));
-    tracer.error(__filename);
-    res.status(200).send({
-      result: langs.error,
-      message: langs.unknownServerError,
-      err,
-    });
+    helpers.handleErr(res, langs, err);
   }
 };
 
@@ -98,34 +93,16 @@ const saveAboutUs = async (req, res, next) => {
             data: rows,
           });
         } catch (err) {
-          tracer.error(JSON.stringify(err));
-          tracer.error(__filename);
-          res.status(200).send({
-            result: langs.error,
-            message: langs.unknownServerError,
-            err,
-          });
+          helpers.handleErr(res, langs, err);
         }
       });
       video.on("error", err => {
-        tracer.error(JSON.stringify(err));
-        tracer.error(__filename);
-        res.status(200).send({
-          result: langs.error,
-          message: langs.unknownServerError,
-          err,
-        });
+        helpers.handleErr(res, langs, err);
       });
       video.pipe(videoWritable);
     });
     brochure.on("error", err => {
-      tracer.error(JSON.stringify(err));
-      tracer.error(__filename);
-      res.status(200).send({
-        result: langs.error,
-        message: langs.unknownServerError,
-        err,
-      });
+      helpers.handleErr(res, langs, err);
     });
     brochure.pipe(brochureWritable);
   });
@@ -178,23 +155,11 @@ const saveAboutUsBrochure = async (req, res, next) => {
           },
         });
       } catch (err) {
-        tracer.error(JSON.stringify(err));
-        tracer.error(__filename);
-        res.status(200).send({
-          result: langs.error,
-          message: langs.unknownServerError,
-          err,
-        });
+        helpers.handleErr(res, langs, err);
       }
     });
     brochure.on("error", err => {
-      tracer.error(JSON.stringify(err));
-      tracer.error(__filename);
-      res.status(200).send({
-        result: langs.error,
-        message: langs.unknownServerError,
-        err,
-      });
+      helpers.handleErr(res, langs, err);
     });
     brochure.pipe(brochureWritable);
   });
@@ -248,23 +213,11 @@ const saveAboutUsVideo = async (req, res, next) => {
           },
         });
       } catch (err) {
-        tracer.error(JSON.stringify(err));
-        tracer.error(__filename);
-        res.status(200).send({
-          result: langs.error,
-          message: langs.unknownServerError,
-          err,
-        });
+        helpers.handleErr(res, langs, err);
       }
     });
     video.on("error", err => {
-      tracer.error(JSON.stringify(err));
-      tracer.error(__filename);
-      res.status(200).send({
-        result: langs.error,
-        message: langs.unknownServerError,
-        err,
-      });
+      helpers.handleErr(res, langs, err);
     });
     video.pipe(videoWritable);
   });

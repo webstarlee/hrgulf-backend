@@ -171,4 +171,14 @@ export default {
       throw err;
     }
   },
+
+  handleErr: (res, langs, err) => {
+    tracer.error(err);
+    tracer.error(__filename);
+    res.status(200).send({
+      result: langs.error,
+      message: langs.unknownServerError,
+      err,
+    });
+  }
 };

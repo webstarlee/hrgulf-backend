@@ -41,11 +41,17 @@ module.exports = (env, argv) => {
           test: /\.js$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader"
-          }
-        }
-      ]
+            loader: "babel-loader",
+          },
+        },
+        {
+          test: /\.js$/,
+          use: ["source-map-loader"],
+          enforce: "pre"
+        },
+      ],
     },
+    devtool: "eval-cheap-module-source-map",
     plugins: argv.mode === "production" ? [
       new JavaScriptObfuscator ({
         compact: true,
