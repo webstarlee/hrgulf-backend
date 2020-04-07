@@ -34,6 +34,9 @@ CREATE TABLE `core_avatars` (
 
 /*Data for the table `core_avatars` */
 
+insert  into `core_avatars`(`id`,`url`,`originUrl`,`scale`,`borderRadius`,`xPosition`,`yPosition`,`rotate`) values 
+(1,'uploads/avatars/19ca2ab0-e2d3-4f83-89dd-d634709316b8.png','',1,14,0.49771689497716887,0.5063926940639267,0);
+
 /*Table structure for table `core_career_levels` */
 
 DROP TABLE IF EXISTS `core_career_levels`;
@@ -423,6 +426,27 @@ insert  into `core_employment_types`(`id`,`employmentType_en`,`employmentType_ar
 (6,'Part Time Employee','Part Time Employee',''),
 (7,'Temporary Employee','Temporary Employee',''),
 (8,'Volunteer','Volunteer','');
+
+/*Table structure for table `core_grades` */
+
+DROP TABLE IF EXISTS `core_grades`;
+
+CREATE TABLE `core_grades` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `grade_en` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `grade_ar` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deleted_date` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_grades` */
+
+insert  into `core_grades`(`id`,`grade_en`,`grade_ar`,`deleted_date`) values 
+(1,'4-point GPA','4-point GPA',''),
+(2,'5-point GPA','5-point GPA',''),
+(3,'20-point GPA','20-point GPA',''),
+(4,'Percentage (out of 100)','Percentage (out of 100)',''),
+(5,'Rating','Rating','');
 
 /*Table structure for table `core_industries` */
 
@@ -1649,12 +1673,93 @@ CREATE TABLE `core_sign_in_history` (
   `time` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `remoteAddress` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `core_sign_in_history` */
 
 insert  into `core_sign_in_history`(`id`,`userId`,`timestamp`,`date`,`time`,`remoteAddress`) values 
-(1,1,1582873600123,'2020-02-27','11:06 PM','::1');
+(1,1,1582873600123,'2020-02-27','11:06 PM','::1'),
+(2,1,1583633286312,'2020-03-08','11:08 AM','::ffff:127.0.0.1'),
+(3,1,1583934025274,'2020-03-11','10:40 PM','::1'),
+(4,1,1583996077295,'2020-03-12','03:54 PM','::1'),
+(5,1,1583996093289,'2020-03-12','03:54 PM','::1'),
+(6,1,1583996110167,'2020-03-12','03:55 PM','::1'),
+(7,1,1583996113397,'2020-03-12','03:55 PM','::1'),
+(8,1,1583996122651,'2020-03-12','03:55 PM','::1'),
+(9,1,1583996151605,'2020-03-12','03:55 PM','::1'),
+(10,1,1583996195764,'2020-03-12','03:56 PM','::1'),
+(11,1,1583996221693,'2020-03-12','03:57 PM','::1'),
+(12,1,1583999772248,'2020-03-12','04:56 PM','::1'),
+(13,3,1584000445346,'2020-03-12','05:07 PM','::1'),
+(14,1,1584001394888,'2020-03-12','05:23 PM','::1'),
+(15,1,1584023027929,'2020-03-12','11:23 PM','::1'),
+(16,1,1584023150284,'2020-03-12','11:25 PM','::1'),
+(17,1,1584023243690,'2020-03-12','11:27 PM','::1'),
+(18,1,1584023294151,'2020-03-12','11:28 PM','::1'),
+(19,1,1584023336976,'2020-03-12','11:28 PM','::1'),
+(20,1,1584023439397,'2020-03-12','11:30 PM','::1'),
+(21,1,1584023556548,'2020-03-12','11:32 PM','::1'),
+(22,1,1584023656609,'2020-03-12','11:34 PM','::1'),
+(23,1,1584083516083,'2020-03-13','04:11 PM','::1'),
+(24,1,1584083569483,'2020-03-13','04:12 PM','::1'),
+(25,1,1584083606216,'2020-03-13','04:13 PM','::1'),
+(26,1,1584083620646,'2020-03-13','04:13 PM','::1'),
+(27,1,1584520590660,'2020-03-18','05:36 PM','::1'),
+(28,1,1584523683390,'2020-03-18','06:28 PM','::1'),
+(29,5,1584535409805,'2020-03-18','09:43 PM','::1'),
+(30,5,1584535485897,'2020-03-18','09:44 PM','::ffff:127.0.0.1'),
+(31,5,1584555226413,'2020-03-19','03:13 AM','::1'),
+(32,5,1584555246780,'2020-03-19','03:14 AM','::1'),
+(33,5,1584555351174,'2020-03-19','03:15 AM','::1'),
+(34,5,1584555366218,'2020-03-19','03:16 AM','::1'),
+(35,5,1584555375474,'2020-03-19','03:16 AM','::1'),
+(36,5,1584555444621,'2020-03-19','03:17 AM','::1'),
+(37,5,1584555463667,'2020-03-19','03:17 AM','::1'),
+(38,5,1584555470111,'2020-03-19','03:17 AM','::1'),
+(39,5,1584555473053,'2020-03-19','03:17 AM','::1'),
+(40,5,1584602373679,'2020-03-19','04:19 PM','::1'),
+(41,5,1584602460738,'2020-03-19','04:21 PM','::1'),
+(42,5,1584602602448,'2020-03-19','04:23 PM','::1'),
+(43,5,1584602633462,'2020-03-19','04:23 PM','::1'),
+(44,5,1584602640278,'2020-03-19','04:24 PM','::1'),
+(45,5,1584711453217,'2020-03-20','10:37 PM','::1'),
+(46,1,1584711486871,'2020-03-20','10:38 PM','::1'),
+(47,1,1584711683933,'2020-03-20','10:41 PM','::1'),
+(48,1,1584711719880,'2020-03-20','10:41 PM','::1'),
+(49,1,1584956193040,'2020-03-23','06:36 PM','::1'),
+(50,1,1586029100992,'2020-04-05','04:38 AM','::1'),
+(51,1,1586029142834,'2020-04-05','04:39 AM','::1'),
+(52,1,1586029148824,'2020-04-05','04:39 AM','::1');
+
+/*Table structure for table `core_skills` */
+
+DROP TABLE IF EXISTS `core_skills`;
+
+CREATE TABLE `core_skills` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `skill_en` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `skill_ar` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_skills` */
+
+/*Table structure for table `core_specialties` */
+
+DROP TABLE IF EXISTS `core_specialties`;
+
+CREATE TABLE `core_specialties` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `countryCode` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `dialCode` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `specialty_en` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `specialty_ar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_specialties` */
 
 /*Table structure for table `core_users` */
 
@@ -1675,8 +1780,8 @@ CREATE TABLE `core_users` (
   `countryCode` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `phone` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `website` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
-  `nationality` enum('BH','KW','OM','QA','SA','AE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'SA',
-  `country` enum('BH','KW','OM','QA','SA','AE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'SA',
+  `nationalityId` int(11) NOT NULL DEFAULT '0',
+  `countryId` int(11) NOT NULL DEFAULT '0',
   `cityId` int(11) NOT NULL DEFAULT '0',
   `birthday` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `gender` enum('M','F','U') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'M',
@@ -1687,12 +1792,39 @@ CREATE TABLE `core_users` (
   `phoneVerified` tinyint(1) NOT NULL DEFAULT '0',
   `allowedDate` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `core_users` */
 
-insert  into `core_users`(`id`,`workId`,`workRole`,`hireId`,`hireRole`,`email`,`username`,`hash`,`firstName`,`fatherName`,`lastName`,`countryCode`,`phone`,`website`,`nationality`,`country`,`cityId`,`birthday`,`gender`,`createdDate`,`modifiedDate`,`deletedDate`,`emailVerified`,`phoneVerified`,`allowedDate`) values 
-(1,0,'',1,'ADMIN','honey96dev@gmail.com','honey96dev@gmail.com','d23a920d288c583cba26b97b3e1a0269ae5d1ea39f21b01c07ed06860e355655','Zhenlong','Xuanming','Jin','+966','571623415','','SA','SA',0,'','U','2020-02-27','2020-02-27','',0,0,'2020-02-27');
+insert  into `core_users`(`id`,`workId`,`workRole`,`hireId`,`hireRole`,`email`,`username`,`hash`,`firstName`,`fatherName`,`lastName`,`countryCode`,`phone`,`website`,`nationalityId`,`countryId`,`cityId`,`birthday`,`gender`,`createdDate`,`modifiedDate`,`deletedDate`,`emailVerified`,`phoneVerified`,`allowedDate`) values 
+(1,1,'',1,'ADMIN','honey96dev@gmail.com','honey96dev@gmail.com','d23a920d288c583cba26b97b3e1a0269ae5d1ea39f21b01c07ed06860e355655','Zhenlong','Xuan','Jin','+966','566655007','',5,4,90,'1994-01-22','M','2020-02-27','2020-02-27','',0,0,'2020-02-27'),
+(2,0,'',2,'ADMIN','Malsharhan@eliteresources.co','','29816b44157e6eaa90be3de4b48111cecbadf24dcabf06f6dad91e26318b1ad6','Mohammed ','majed','alsharhan','+966','0566655007','',5,5,0,'','U','2020-03-28','2020-03-28','',0,0,'2020-02-27'),
+(3,0,'',5,'ADMIN','godknight122@gmail.com','','d23a920d288c583cba26b97b3e1a0269ae5d1ea39f21b01c07ed06860e355655','Radovan','Faz','Zaric','+966','566421332','',5,5,0,'','U','2020-03-28','2020-03-28','',0,0,'2020-02-27'),
+(4,0,'',6,'ADMIN','recruitment@eliteresources.co','','d23a920d288c583cba26b97b3e1a0269ae5d1ea39f21b01c07ed06860e355655','Mohammed','Majed','Alsharhan','+966','0566655007','',5,5,0,'','U','2020-03-28','2020-03-28','',0,0,'2020-02-27'),
+(5,0,'',7,'ADMIN','PM@eliteresources.co','','d23a920d288c583cba26b97b3e1a0269ae5d1ea39f21b01c07ed06860e355655','Mohammed','Majed','Alsharhan','+966','0566655007','',5,5,0,'','U','2020-03-28','2020-03-28','',0,0,'2020-02-27');
+
+/*Table structure for table `core_visa_statuses` */
+
+DROP TABLE IF EXISTS `core_visa_statuses`;
+
+CREATE TABLE `core_visa_statuses` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `visaStatus_en` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `visaStatus_ar` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `core_visa_statuses` */
+
+insert  into `core_visa_statuses`(`id`,`visaStatus_en`,`visaStatus_ar`,`deletedDate`) values 
+(1,'Citizen','Citizen',''),
+(2,'Residency Visa(Transferable)','Residency Visa(Transferable)',''),
+(3,'Residency Visa(Non-Transferable)','Residency Visa(Non-Transferable)',''),
+(4,'Student Visa','Student Visa',''),
+(5,'Transit Visa','Transit Visa',''),
+(6,'Visit Visa','Visit Visa',''),
+(7,'No Visa','No Visa','');
 
 /*Table structure for table `hire_accounts` */
 
@@ -1702,7 +1834,7 @@ CREATE TABLE `hire_accounts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `hideLocation` tinyint(1) NOT NULL DEFAULT '0',
-  `location` enum('BH','KW','OM','QA','SA','AE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'SA',
+  `countryId` int(11) NOT NULL DEFAULT '0',
   `size` int(4) NOT NULL DEFAULT '10',
   `sectorId` int(11) NOT NULL DEFAULT '0',
   `industryId` int(11) NOT NULL DEFAULT '0',
@@ -1713,12 +1845,18 @@ CREATE TABLE `hire_accounts` (
   `modifiedDate` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `deletedDate` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `hire_accounts` */
 
-insert  into `hire_accounts`(`id`,`name`,`hideLocation`,`location`,`size`,`sectorId`,`industryId`,`type`,`website`,`taxRegNumber`,`createdDate`,`modifiedDate`,`deletedDate`) values 
-(1,'ERC',0,'SA',10,0,0,'PUBLIC','','','2020-02-27','2020-02-27','');
+insert  into `hire_accounts`(`id`,`name`,`hideLocation`,`countryId`,`size`,`sectorId`,`industryId`,`type`,`website`,`taxRegNumber`,`createdDate`,`modifiedDate`,`deletedDate`) values 
+(1,'Wangzi',0,5,50,0,0,'PRIVATE','','','2020-02-27','2020-02-27',''),
+(2,'ERC',0,5,500,0,0,'NON_PROFIT','','','2020-03-28','2020-03-28',''),
+(3,'Erc 2',0,5,50,0,0,'NON_PROFIT','','','2020-03-28','2020-03-28',''),
+(4,'Erc 2',0,5,50,0,0,'NON_PROFIT','','','2020-03-28','2020-03-28',''),
+(5,'KSIC',0,5,1,0,0,'NON_PROFIT','','','2020-03-28','2020-03-28',''),
+(6,'Mohammed Majed Alsharhan',0,5,100,0,0,'AGENCY','','','2020-03-28','2020-03-28',''),
+(7,'Mohammed Majed Alsharhan2',0,5,100,0,0,'AGENCY','','','2020-03-28','2020-03-28','');
 
 /*Table structure for table `hire_job_candidate_requirements` */
 
@@ -1734,21 +1872,34 @@ CREATE TABLE `hire_job_candidate_requirements` (
   `countryId` int(11) NOT NULL DEFAULT '0',
   `cityId` int(11) NOT NULL DEFAULT '0',
   `nationalityId` int(11) NOT NULL DEFAULT '0',
-  `gender` enum('U','M','F') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'U',
+  `gender` enum('U','M','F') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'U',
   `age1` int(3) NOT NULL DEFAULT '0',
   `age2` int(3) NOT NULL DEFAULT '0',
-  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `deletedDate` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `hire_job_candidate_requirements` */
 
 insert  into `hire_job_candidate_requirements`(`id`,`careerLevel`,`xpYear1`,`xpYear2`,`majorId`,`degree`,`countryId`,`cityId`,`nationalityId`,`gender`,`age1`,`age2`,`deletedDate`) values 
-(0,3,0,0,0,0,0,0,0,'U',0,0,''),
-(1,3,1,2,15,3,5,133,5,'U',0,0,''),
-(4,3,2,11,0,4,0,0,0,'U',0,0,''),
-(5,6,0,0,0,0,0,0,0,'U',0,0,''),
-(6,5,2,4,0,0,0,0,0,'U',0,0,'');
+(0,4,2,4,28,4,5,134,5,'M',27,29,''),
+(1,4,0,0,0,0,0,0,0,'U',0,0,''),
+(2,4,2,17,1,5,3,49,2,'F',20,27,''),
+(3,3,0,2,26,3,5,181,5,'F',25,27,''),
+(4,4,2,4,28,4,5,134,5,'U',27,29,''),
+(5,4,3,8,140,3,1,1,1,'F',25,30,''),
+(6,4,3,7,27,4,2,27,2,'U',26,30,''),
+(7,3,2,4,28,3,5,181,5,'M',25,30,''),
+(8,4,6,10,26,3,3,49,3,'M',26,33,''),
+(9,6,9,18,27,4,6,210,6,'U',25,38,''),
+(10,5,10,18,232,4,5,157,5,'U',27,40,''),
+(11,5,4,7,51,3,2,30,2,'M',26,35,''),
+(12,4,3,7,28,3,1,1,1,'U',28,36,''),
+(13,4,4,8,29,3,2,27,2,'M',26,33,''),
+(14,5,5,10,27,4,3,49,3,'U',27,37,''),
+(15,4,3,6,111,3,5,181,5,'F',27,37,''),
+(16,5,6,13,232,4,6,210,6,'U',27,38,''),
+(17,4,0,0,0,0,0,0,0,'U',0,0,'');
 
 /*Table structure for table `hire_job_email_setting` */
 
@@ -1783,22 +1934,37 @@ CREATE TABLE `hire_jobs` (
   `employmentTypeId` int(11) NOT NULL DEFAULT '0',
   `salaryRangeId` int(11) NOT NULL DEFAULT '0',
   `vacanciesCount` int(11) NOT NULL DEFAULT '0',
-  `description` text COLLATE utf8mb4_general_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `skills` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `specialties` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `questionnaireId` int(11) NOT NULL DEFAULT '0',
   `isActive` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-inactive, 1-active, 2-draft',
-  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `createdDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedDate` timestamp NOT NULL,
+  `deletedDate` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `hire_jobs` */
 
-insert  into `hire_jobs`(`id`,`hireId`,`candidateType`,`title`,`jobRoleId`,`jobSubroleId`,`sectorId`,`industryId`,`countryId`,`cityId`,`employmentTypeId`,`salaryRangeId`,`vacanciesCount`,`description`,`skills`,`specialties`,`questionnaireId`,`isActive`,`deletedDate`) values 
-(1,1,'SKILLED','I want to hire an artist',25,289,2,12,5,181,2,4,2,'<p>Hello</p>\n','<p>painting</p>\n','painting',3,0,''),
-(4,1,'SKILLED','qqq',9,91,6,54,4,89,2,0,0,'<p>afafsdqqqq</p>\n','<p>wwww</p>\n','asdf,aaa',1,0,''),
-(5,1,'SKILLED','Portfolio',11,108,2,13,5,106,0,0,0,'<p>hehehe</p>\n','<p>aaa</p>\n','hihihi',2,0,''),
-(6,1,'PROFESSIONAL','jedzidvunujo',12,120,9,78,3,55,0,0,0,'<p>safasdf</p>\n','<p>gggff</p>\n','sdfg',0,0,'');
+insert  into `hire_jobs`(`id`,`hireId`,`candidateType`,`title`,`jobRoleId`,`jobSubroleId`,`sectorId`,`industryId`,`countryId`,`cityId`,`employmentTypeId`,`salaryRangeId`,`vacanciesCount`,`description`,`skills`,`specialties`,`questionnaireId`,`isActive`,`createdDate`,`updatedDate`,`deletedDate`) values 
+(1,1,'SKILLED','Design Logo',11,99,2,10,4,95,0,0,0,'<p>I want to hire a designer to make Logo for our company</p>\n','<p>Photoshop</p>\n','design',1,0,'2020-04-01 20:36:26','2020-04-03 20:42:19',''),
+(2,2,'PROFESSIONAL','V',1,1,1,2,3,49,2,3,2,'<p></p>\n','<p>f</p>\n','specialist',0,1,'2020-04-02 20:36:28','2020-04-03 20:36:28',''),
+(3,2,'PROFESSIONAL','Job1',2,36,11,89,5,181,4,2,0,'<p></p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:35:26','2020-04-03 20:35:26',''),
+(4,2,'PROFESSIONAL','Job2',4,53,3,22,5,134,2,3,3,'<p>f</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:02','2020-04-03 20:37:02',''),
+(5,2,'PROFESSIONAL','Job3',11,104,2,10,1,1,4,3,2,'<p>Graphic Designer</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:06','2020-04-03 20:37:06',''),
+(6,2,'PROFESSIONAL','Job4',25,282,3,18,2,27,4,3,0,'<p>Business Support Manager&nbsp;</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-03-25 20:37:19','2020-04-03 20:37:19',''),
+(7,7,'PROFESSIONAL','Job1',4,53,3,18,5,181,4,1,1,'<p>Account Manager</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:33','2020-04-03 20:37:33',''),
+(8,7,'PROFESSIONAL','Job2',9,88,3,20,3,49,4,3,1,'<p>Business Consultant&nbsp;</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:22','2020-04-03 20:37:22',''),
+(9,7,'PROFESSIONAL','Job3',2,36,3,18,6,210,4,4,0,'<p>Admin Assistant&nbsp;</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:39','2020-04-03 20:37:39',''),
+(10,7,'PROFESSIONAL','Job4',22,255,7,55,5,157,4,3,0,'<p>Legal Advisor:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-03-11 20:38:00','2020-04-03 20:38:00',''),
+(11,7,'PROFESSIONAL','Job5',34,393,3,18,2,30,4,3,0,'<p>Account Executive:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:10','2020-04-03 20:37:10',''),
+(12,6,'PROFESSIONAL','Job1',1,1,3,18,1,1,4,2,0,'<p>Accountant:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:54','2020-04-03 20:37:54',''),
+(13,6,'PROFESSIONAL','Job2',4,54,3,20,2,27,4,3,0,'<p>Bankers Insurance:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-04-03 20:37:47','2020-04-03 20:37:47',''),
+(14,6,'PROFESSIONAL','Job3',25,293,3,18,3,49,4,3,0,'<p>General Manager:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-03-12 20:37:51','2020-04-03 20:37:51',''),
+(15,6,'PROFESSIONAL','Job4',39,450,6,49,5,181,4,3,0,'<p>Learning Manager:&nbsp;</p>\n','<p>Skills:&nbsp;</p>\n','specialist',0,1,'2020-04-03 20:37:43','2020-04-03 20:37:43',''),
+(16,6,'PROFESSIONAL','Job5',22,254,3,18,6,210,4,3,2,'<p>Lawyer:</p>\n','<p>Skills:</p>\n','specialist',0,1,'2020-03-30 20:37:26','2020-04-03 20:37:26',''),
+(17,1,'SKILLED','Wordpress Expert',32,388,11,92,2,35,0,0,0,'<p>I want to hire a person who is good at Wordpress</p>\n','<p>AAAA</p>\n','fdss',0,0,'2020-04-03 20:44:18','2020-04-03 20:44:18','');
 
 /*Table structure for table `hire_letters` */
 
@@ -1907,16 +2073,70 @@ insert  into `hire_questionnaire_questions`(`id`,`questionnaireId`,`question`,`t
 (47,2,'How old are you?','YES_NO',0,'',0,'',''),
 (48,3,'aaaa','YES_NO',0,'',0,'','');
 
+/*Table structure for table `work_account2skills` */
+
+DROP TABLE IF EXISTS `work_account2skills`;
+
+CREATE TABLE `work_account2skills` (
+  `accountId` int(11) NOT NULL,
+  `skillId` int(11) NOT NULL,
+  `isActive` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`accountId`,`skillId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `work_account2skills` */
+
 /*Table structure for table `work_accounts` */
 
 DROP TABLE IF EXISTS `work_accounts`;
 
 CREATE TABLE `work_accounts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `jobRoleId` int(11) NOT NULL DEFAULT '0',
+  `jobTitle` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `companyName` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `startDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `endDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `isPresent` tinyint(1) NOT NULL DEFAULT '0',
+  `jobLocationId` int(11) NOT NULL DEFAULT '0',
+  `companySectorId` int(11) NOT NULL DEFAULT '0',
+  `companyIndustryId` int(11) NOT NULL DEFAULT '0',
+  `jobVisaStatusId` int(11) NOT NULL DEFAULT '0',
+  `careerLevel` int(3) NOT NULL DEFAULT '0',
+  `degree` int(1) NOT NULL DEFAULT '0',
+  `university` varchar(60) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `majorId` int(11) NOT NULL DEFAULT '0',
+  `graduatedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `gradeId` int(11) NOT NULL DEFAULT '0',
+  `cvUploaded` tinyint(1) NOT NULL DEFAULT '0',
+  `cvPath` varchar(1000) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `isVisited` tinyint(1) NOT NULL DEFAULT '0',
+  `deletedDate` varchar(12) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `work_accounts` */
+
+insert  into `work_accounts`(`id`,`jobRoleId`,`jobTitle`,`companyName`,`startDate`,`endDate`,`isPresent`,`jobLocationId`,`companySectorId`,`companyIndustryId`,`jobVisaStatusId`,`careerLevel`,`degree`,`university`,`majorId`,`graduatedDate`,`gradeId`,`cvUploaded`,`cvPath`,`isVisited`,`deletedDate`) values 
+(1,1,'Web Developer','Wangzi','2016-1-1','2020-3-4',1,3,1,5,1,3,3,'Havard University',3,'2017-3-4',1,1,'uploads/work/cvs/2ce25ed2-c8e3-4110-be9d-6c0dba907d4f.pdf',1,''),
+(2,1,'Web Developer1','Wangzi2','2016-01-13','2020-03-31',1,1,9,79,1,5,2,'Havard University222',1,'2017-03-30',2,0,'',1,'');
+
+/*Table structure for table `work_job_candidates` */
+
+DROP TABLE IF EXISTS `work_job_candidates`;
+
+CREATE TABLE `work_job_candidates` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL,
+  `deletedAt` timestamp NULL DEFAULT NULL,
+  `jobId` bigint(20) NOT NULL,
+  `workId` int(11) NOT NULL,
+  `status` enum('APPLIED','RETRACTED') COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-/*Data for the table `work_accounts` */
+/*Data for the table `work_job_candidates` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
