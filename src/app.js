@@ -7,15 +7,16 @@ import logger from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import Ddos from "ddos";
+import apiRouter from "./routes/api";
+import adminApiRouter from "./routes/admin-api";
+import {server} from "core/config";
+
 const ddos = new Ddos({
   maxcount: process.env.DDOS_MAXCOUNT,
   burst: process.env.DDOS_BURST,
   limit: process.env.DDOS_LIMIT,
   trustProxy: !process.env.DDOS_TRUST_PROXY || process.env.DDOS_TRUST_PROXY === "true",
 });
-
-import apiRouter from "./routes/api";
-import adminApiRouter from "./routes/admin-api";
 
 const app = express();
 const cwd = process.cwd();
@@ -38,7 +39,7 @@ app.use(formData.format());
 app.use(formData.stream());
 app.use(formData.union());
 
-process.env.NODE_ENV !== "production" && app.use(cors());
+server.isDev && app.use(cors());
 app.use(helmet());
 
 app.use("/admin/assets", express.static(path.join(cwd, "public")));

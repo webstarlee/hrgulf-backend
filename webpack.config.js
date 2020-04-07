@@ -1,10 +1,10 @@
-  /* This config file is only for transpiling the Express server file.
- * You need webpack-node-externals to transpile an express file
- * but if you use it on your regular React bundle, then all the 
- * node modules your app needs to function get stripped out.
- *
- * Note: that prod and dev mode are set in npm scripts.
- */
+/* This config file is only for transpiling the Express server file.
+* You need webpack-node-externals to transpile an express file
+* but if you use it on your regular React bundle, then all the
+* node modules your app needs to function get stripped out.
+*
+* Note: that prod and dev mode are set in npm scripts.
+*/
 const path = require("path");
 const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
@@ -12,9 +12,32 @@ const JavaScriptObfuscator = require("webpack-obfuscator");
 
 module.exports = (env, argv) => {
   const SERVER_PATH = "./src/bin/start-webapp.js";
+  let plugins = [];
+
+  if (argv.mode !== "production") {
+    // plugins.push(new StartServerPlugin({
+    //   name: "server.development.js",
+    //   // nodeArgs: ["--inspect"], // allow debugging
+    //   args: [], // pass args to script
+    //   signal: false, // signal to send for HMR (defaults to `false`, uses "SIGUSR2" if `true`)
+    //   keyboard: true, // Allow typing "rs" to restart the server. default: only if NODE_ENV is "development"
+    // }));
+  }
+  if (argv.mode === "production") {
+    plugins.push(new JavaScriptObfuscator({
+      compact: true,
+      controlFlowFlattening: true,
+      disableConsoleOutput: true,
+      renameGlobals: true,
+      rotateUnicodeArray: true,
+      stringArray: true,
+      stringArrayEncoding: "rc4",
+    }, []));
+  }
+
   return ({
     entry: {
-      server: SERVER_PATH,
+      server: [SERVER_PATH],
     },
     output: {
       path: path.join(__dirname, "backend"),
@@ -25,7 +48,7 @@ module.exports = (env, argv) => {
     target: "node",
     node: {
       // Need this when working with express, otherwise the build fails
-      __dirname: false,   // if you don't put this is, __dirname
+      __dirname: false,   // if you don"t put this is, __dirname
       __filename: false,  // and __filename return blank or /
     },
     resolve: {
@@ -52,17 +75,7 @@ module.exports = (env, argv) => {
       ],
     },
     devtool: "eval-cheap-module-source-map",
-    plugins: argv.mode === "production" ? [
-      new JavaScriptObfuscator ({
-        compact: true,
-        controlFlowFlattening: true,
-        disableConsoleOutput: true,
-        renameGlobals: true,
-        rotateUnicodeArray: true,
-        stringArray: true,
-        stringArrayEncoding: "rc4",
-      }, []) ,
-    ] : [],
+    plugins: plugins,
   });
 };
 
